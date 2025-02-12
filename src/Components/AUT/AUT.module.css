@@ -1,0 +1,63 @@
+/* UseCaseForm.module.css */
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: auto;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+
+  h1 {
+    /* font-size: 24px; */
+    color: #333;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 24px;
+  color: #333;
+}
+
+.image {
+  width: 50px; /* Adjust as needed */
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.useCaseGroup {
+  flex-direction: row;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.inputField {
+  flex: 1;
+  margin-right: 10px;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+}
+
+.inputField:last-child {
+  margin-right: 0;
+}
+
+.submitButton {
+  padding: 10px 50px;
+  font-size: 16px;
+  background-color: yellow;
+  border: none;
+  cursor: pointer;
+  border-radius: 50px;
+  /* justify-content: center; */
+  text-align: center;
+}
