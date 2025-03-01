@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import styles from "./PreSurvey.module.css"; // Importing the CSS file
+import styles from "./PostSurvey.module.css"; // Importing the CSS file
 import { useNavigate } from "react-router-dom";
-import { useSurvey } from "../../surveyIDContext";
 
 function SurveyForm() {
   const [formData, setFormData] = useState({
@@ -14,7 +13,6 @@ function SurveyForm() {
   });
 
   const navigate = useNavigate();
-  const { surveyId, setSurveyId } = useSurvey();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -26,29 +24,22 @@ function SurveyForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Trying to submit Form:", formData);
-
+    console.log("Form data submitted:", formData);
+    // You can replace the console.log with your submission logic
     try {
-      const response = await fetch("http://localhost:5000/PreSurvey", {
+      const response = await fetch("http://localhost:5000/PostSurvey", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
-
-      const responseData = await response.json(); // Decode JSON response
-      console.log("Received ID:", responseData._id);
       if (response.ok) {
-        // console.log("Received ID:", responseData._id); // Log or use the ID as needed
-        setSurveyId(responseData._id); // Set the ID in the context
-        navigate("/AUT"); // Use the actual ID from the server
-
-        // prop drilling with the useNavigate hook
-        // console.log("Received ID:", responseData._id); // Log or use the ID as needed
-        // navigate("/AUT", { state: { preSurveyId: responseData._id } }); // Use the actual ID from the server
+        const jsonResponse = await response.json();
+        console.log("Success:", jsonResponse);
+        // Handle success here, e.g., displaying a success message
       } else {
-        throw new Error(`Failed to submit form: ${responseData.message}`);
+        throw new Error("Failed to send data");
       }
     } catch (error) {
       console.error("Error:", error);

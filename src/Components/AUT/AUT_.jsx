@@ -1,20 +1,31 @@
 import React, { useState } from "react";
-import styles from "./AUT.module.css"; // Importing the CSS module
+import styles from "./AUT_.module.css"; // Importing the CSS module
 import { useNavigate, useLocation } from "react-router-dom";
-import Instructions from "../Instructions/Instructions";
 import { useSurvey } from "../../surveyIDContext";
+
 function AUT() {
   const [useCases, setUseCases] = useState(() =>
     Array.from({ length: 3 }, () => ({ use: "", explanation: "" }))
   );
   const { surveyId, setSurveyId } = useSurvey();
 
-  const navigate = useNavigate();
-  // const location = useLocation();
-  // const { preSurveyId } = location.state || {}; // Ensure a fallback if state is undefined
+  const [inputValue, setInputValue] = useState("");
+  const initialUseCases = () =>
+    Array.from({ length: 3 }, () => ({ use: "", explanation: "" }));
+
+  //   let round = 1;
+  const [round, setRound] = useState(1); // Manage round as state
 
   const preSurveyId = surveyId;
-  // console.log("preSurveyId", preSurveyId);
+  //   console.log("preSurveyId", preSurveyId);
+  //   const { preSurveyId } = location.state || {}; // Ensure a fallback if state is undefined
+
+  // JSON body data
+  const bodyData = {
+    useCases: useCases,
+    preSurveyId: surveyId,
+    round: round, // Include the round in the JSON body
+  };
 
   const handleChange = (index, type, value) => {
     const newUseCases = [...useCases];
@@ -24,10 +35,7 @@ function AUT() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(
-      "Sending data:",
-      JSON.stringify({ useCases, preSurveyId: preSurveyId })
-    );
+    console.log("Sending data:", JSON.stringify({ bodyData }));
 
     // Simple client-side validation
     if (useCases.some((uc) => !uc.use.trim() || !uc.explanation.trim())) {
@@ -36,16 +44,28 @@ function AUT() {
     }
 
     try {
-      console.log("PreSurveyId", preSurveyId);
-      const response = await fetch("http://localhost:5000/AUT", {
+      console.log("preSurveyId", preSurveyId);
+      const response = await fetch("http://localhost:5000/AUT_gpt", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ useCases, preSurveyId: preSurveyId }),
+        body: JSON.stringify(bodyData),
       });
+
       if (response.ok) {
-        navigate("/AUT_gpt");
+        response.json().then((body) => {
+          console.log(body); // Log the body of the response
+          setInputValue(""); // Clear the input field
+          console.log("Submitted for Round", round);
+          setUseCases(initialUseCases()); // Reset form to initial state
+          setRound((currentRound) => currentRound + 1); // Increment round
+        });
+        // console.log(response.body);
+        // setInputValue(""); // Clear the input field
+        // console.log("Submitted for Round", round);
+        // setUseCases(initialUseCases()); // Reset form to initial state
+        // setRound((currentRound) => currentRound + 1); // Increment round
       } else {
         alert("Failed to submit form");
       }
@@ -57,7 +77,6 @@ function AUT() {
 
   return (
     <>
-      <Instructions />
       <div className={styles.container}>
         <h1>AUT</h1>
         <div className={styles.header}>

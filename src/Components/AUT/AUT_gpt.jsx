@@ -1,64 +1,25 @@
 import React, { useState } from "react";
-import styles from "./AUT_gpt.module.css"; // Importing the CSS module
+// import styles from "./AUT_gpt.module.css"; // Importing the CSS module
 import Chatbot from "./chat_bot";
+import { useNavigate, useLocation } from "react-router-dom";
+import Instructions from "../Instructions/Instructions";
+
+import AUT_ from "./AUT_";
+import styles from "./organize.module.css"; // Importing the CSS module
 
 function AUT_gpt() {
-  const [useCases, setUseCases] = useState(
-    Array(5).fill({ use: "", explanation: "" })
-  );
-
-  const handleChange = (index, type, value) => {
-    const newUseCases = [...useCases];
-    newUseCases[index][type] = value;
-    setUseCases(newUseCases);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Submitted use cases:", useCases);
-    // Implement submission logic, e.g., sending to a server
-  };
-
   return (
     <>
-      <div className={styles.main_container}>
-        <div className={styles.container}>
-          <h1>AUT</h1>
-          <div className={styles.header}>
-            <img
-              src="bicyle-pump.png"
-              alt="Bicycle Pump"
-              className={styles.image}
-            />
-            <h2 className={styles.title}>BICYCLE PUMP</h2>
+      <div className={styles.main}>
+        <Instructions className={styles.instructions} />
+        <div className={styles.bottom_container}>
+          <div className={styles.aut_component}>
+            <AUT_ />
           </div>
-          <form onSubmit={handleSubmit}>
-            {useCases.map((item, index) => (
-              <div key={index} className={styles.useCaseGroup}>
-                <input
-                  type="text"
-                  placeholder={`Use Case #${index + 1}`}
-                  value={item.use}
-                  onChange={(e) => handleChange(index, "use", e.target.value)}
-                  className={styles.inputField}
-                />
-                <input
-                  type="text"
-                  placeholder="Explanation"
-                  value={item.explanation}
-                  onChange={(e) =>
-                    handleChange(index, "explanation", e.target.value)
-                  }
-                  className={styles.inputField}
-                />
-              </div>
-            ))}
-            <button type="submit" className={styles.submitButton}>
-              Submit
-            </button>
-          </form>
+          <div className={styles.chat}>
+            <Chatbot />
+          </div>
         </div>
-        <Chatbot />
       </div>
     </>
   );
