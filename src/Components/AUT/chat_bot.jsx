@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Chat_bot.module.css"; // Importing the CSS module
 
-function Chatbot() {
+function Chatbot({ resetToggle, onReset, temperature }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  console.log("TEMPERATURE OF GPT = ", temperature);
+
+  useEffect(() => {
+    if (resetToggle) {
+      console.log("Attempting to reset chatbot");
+      setMessages([]); // Reset messages or other state
+      onReset(); // Call onReset to toggle reset state back
+    }
+  }, [resetToggle, onReset]);
 
   const handleInputChange = (event) => {
     setInput(event.target.value);

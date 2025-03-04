@@ -3,7 +3,7 @@ import styles from "./AUT_.module.css"; // Importing the CSS module
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSurvey } from "../../surveyIDContext";
 
-function AUT() {
+function AUT({ round, onStateChange }) {
   const [useCases, setUseCases] = useState(() =>
     Array.from({ length: 3 }, () => ({ use: "", explanation: "" }))
   );
@@ -14,7 +14,11 @@ function AUT() {
     Array.from({ length: 3 }, () => ({ use: "", explanation: "" }));
 
   //   let round = 1;
-  const [round, setRound] = useState(1); // Manage round as state
+  // const [round, setRound] = useState(1); // Manage round as state
+
+  const updateState = () => {
+    onStateChange(round + 1); // Increment or modify the state
+  };
 
   const preSurveyId = surveyId;
   //   console.log("preSurveyId", preSurveyId);
@@ -59,13 +63,9 @@ function AUT() {
           setInputValue(""); // Clear the input field
           console.log("Submitted for Round", round);
           setUseCases(initialUseCases()); // Reset form to initial state
-          setRound((currentRound) => currentRound + 1); // Increment round
+          // setRound((currentRound) => currentRound + 1); // Increment round
+          updateState();
         });
-        // console.log(response.body);
-        // setInputValue(""); // Clear the input field
-        // console.log("Submitted for Round", round);
-        // setUseCases(initialUseCases()); // Reset form to initial state
-        // setRound((currentRound) => currentRound + 1); // Increment round
       } else {
         alert("Failed to submit form");
       }
