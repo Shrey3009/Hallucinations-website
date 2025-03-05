@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styles from "./Chat_bot.module.css"; // Importing the CSS module
+import styles from "./chat_bot.module.css"; // Importing the CSS module
 
 function Chatbot({ resetToggle, onReset, temperature }) {
   const [messages, setMessages] = useState([]);
