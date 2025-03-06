@@ -8,8 +8,6 @@ import AUT_gpt from "./Components/AUT/AUT_gpt";
 import PostSurvey from "./Components/PostSurvey/PostSurvey";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <Router>
       <Routes>
