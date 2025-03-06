@@ -28,7 +28,7 @@ function SurveyForm() {
     e.preventDefault();
     console.log("Trying to submit Form:", formData);
     let NODE_api = import.meta.env.VITE_NODE_API + "/PreSurvey";
-    // console.log("VITE_NODE_URI", NODE_api);
+    console.log("VITE_NODE_URI", NODE_api);
 
     try {
       const response = await fetch(NODE_api, {
