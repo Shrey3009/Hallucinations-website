@@ -49,7 +49,8 @@ function AUT({ round, onStateChange }) {
 
     try {
       console.log("preSurveyId", preSurveyId);
-      const response = await fetch("http://localhost:5000/AUT_gpt", {
+      const NODE_api = import.meta.env.VITE_SOME_KEY;
+      const response = await fetch(NODE_api + "/AUT_gpt", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

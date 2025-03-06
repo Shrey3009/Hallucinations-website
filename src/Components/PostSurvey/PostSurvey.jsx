@@ -25,9 +25,10 @@ function SurveyForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form data submitted:", formData);
+    const NODE_api = import.meta.env.VITE_SOME_KEY;
     // You can replace the console.log with your submission logic
     try {
-      const response = await fetch("http://localhost:5000/PostSurvey", {
+      const response = await fetch(NODE_api + "/PostSurvey", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -27,9 +27,11 @@ function SurveyForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Trying to submit Form:", formData);
+    const NODE_api = import.meta.env.VITE_SOME_KEY;
+    // console.log("VITE_NODE_URI", NODE_api);
 
     try {
-      const response = await fetch("http://localhost:5000/PreSurvey", {
+      const response = await fetch(NODE_api + "/PreSurvey", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
