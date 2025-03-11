@@ -36,7 +36,7 @@ function AUT() {
     }
 
     try {
-      console.log("PreSurveyId", preSurveyId);
+      // console.log("PreSurveyId", preSurveyId);
       let NODE_api = import.meta.env.VITE_NODE_API + "/AUT";
       const response = await fetch(NODE_api, {
         method: "POST",
