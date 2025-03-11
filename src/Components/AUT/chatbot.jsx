@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import styles from "./chatbot.module.css";
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import {
   MainContainer,
@@ -119,25 +120,31 @@ function chatbot({ resetToggle, onReset, temperature }) {
 
   return (
     <div className="App">
-      <div style={{ position: "relative", height: "600px", width: "450px" }}>
-        <MainContainer>
-          <ChatContainer>
-            <MessageList
-              scrollBehavior="smooth"
-              typingIndicator={
-                isTyping ? (
-                  <TypingIndicator content="ChatGPT is typing" />
-                ) : null
-              }
-            >
-              {messages.map((message, i) => {
-                console.log(message);
-                return <Message key={i} model={message} />;
-              })}
-            </MessageList>
-            <MessageInput placeholder="Type message here" onSend={handleSend} />
-          </ChatContainer>
-        </MainContainer>
+      <div className={styles.container}>
+        <h1>ChatGPT</h1>
+        <div style={{ position: "relative", height: "600px", width: "500px" }}>
+          <MainContainer>
+            <ChatContainer>
+              <MessageList
+                scrollBehavior="smooth"
+                typingIndicator={
+                  isTyping ? (
+                    <TypingIndicator content="ChatGPT is typing" />
+                  ) : null
+                }
+              >
+                {messages.map((message, i) => {
+                  console.log(message);
+                  return <Message key={i} model={message} />;
+                })}
+              </MessageList>
+              <MessageInput
+                placeholder="Type message here"
+                onSend={handleSend}
+              />
+            </ChatContainer>
+          </MainContainer>
+        </div>
       </div>
     </div>
   );

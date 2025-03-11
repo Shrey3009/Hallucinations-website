@@ -9,15 +9,19 @@
   display: flex;
   flex-direction: row;
   height: 100vh;
-  width: 90%;
+  /* width: 90%; */
   margin-top: 20px;
+  /* margin-left: 0px; */
 }
 
 .aut_component {
-  flex: 1;
+  /* flex: 1; */
+  flex-grow: 2;
+  height: 100vh;
 }
 
 .chat {
-  flex: 1;
-  max-width: 300px;
+  /* flex: 1; */
+  flex-grow: 1;
+  max-width: 500px;
 }

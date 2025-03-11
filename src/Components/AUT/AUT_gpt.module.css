@@ -4,14 +4,14 @@
   /* justify-content: center; */
   flex-direction: row;
   /* border: 1px solid #ccc; */
-  margin: 20px;
+  margin: 10px;
   /* position: relative; */
 }
 
 .container {
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 90%;
   margin: auto;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
