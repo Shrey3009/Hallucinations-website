@@ -14,6 +14,13 @@
     text-align: center;
     justify-content: center;
   }
+
+  p {
+    width: 50%; /* Adjust width as needed for your design */
+    margin: 0 auto; /* Horizontally center the block within its container */
+    text-align: left; /* Center the text within the paragraph block */
+    word-wrap: break-word;
+  }
 }
 
 .header {

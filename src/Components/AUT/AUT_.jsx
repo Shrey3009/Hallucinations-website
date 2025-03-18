@@ -87,6 +87,11 @@ function AUT({ round, onStateChange }) {
     <>
       <div className={styles.container}>
         <h1>AUT</h1>
+        <p>
+          List as many alternative uses as possible for the following objects
+          and provide a reasonable explanation for each use:
+        </p>
+        <br></br>
         <div className={styles.header}>
           <img
             src="../../assets/bicycle-pump.png"
