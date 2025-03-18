@@ -68,7 +68,9 @@ function AUT({ round, onStateChange }) {
           // setInputValue(""); // Clear the input field
           console.log("Submitted for Round", round);
           // setUseCases(initialUseCases()); // Reset form to initial state
-          setUseCases();
+          setUseCases(() =>
+            Array.from({ length: 15 }, () => ({ use: "", explanation: "" }))
+          );
           // setRound((currentRound) => currentRound + 1); // Increment round
           updateState();
         });
