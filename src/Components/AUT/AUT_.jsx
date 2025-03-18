@@ -11,7 +11,7 @@ function AUT({ round, onStateChange }) {
 
   const [inputValue, setInputValue] = useState("");
   const initialUseCases = () =>
-    Array.from({ length: 3 }, () => ({ use: "", explanation: "" }));
+    Array.from({ length: 15 }, () => ({ use: "", explanation: "" }));
 
   //   let round = 1;
   // const [round, setRound] = useState(1); // Manage round as state
