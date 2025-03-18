@@ -13,6 +13,10 @@ function AUT({ round, onStateChange }) {
   const initialUseCases = () =>
     Array.from({ length: 15 }, () => ({ use: "", explanation: "" }));
 
+  // const [inputValue, setInputValue] = useState(() =>
+  //   Array.from({ length: 15 }, () => ({ use: "", explanation: "" }))
+  // );
+
   //   let round = 1;
   // const [round, setRound] = useState(1); // Manage round as state
 
@@ -61,9 +65,10 @@ function AUT({ round, onStateChange }) {
       if (response.ok) {
         response.json().then((body) => {
           console.log(body); // Log the body of the response
-          setInputValue(""); // Clear the input field
+          // setInputValue(""); // Clear the input field
           console.log("Submitted for Round", round);
-          setUseCases(initialUseCases()); // Reset form to initial state
+          // setUseCases(initialUseCases()); // Reset form to initial state
+          setUseCases("");
           // setRound((currentRound) => currentRound + 1); // Increment round
           updateState();
         });
