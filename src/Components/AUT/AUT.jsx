@@ -5,7 +5,7 @@ import Instructions from "../Instructions/Instructions";
 import { useSurvey } from "../../surveyIDContext";
 function AUT() {
   const [useCases, setUseCases] = useState(() =>
-    Array.from({ length: 3 }, () => ({ use: "", explanation: "" }))
+    Array.from({ length: 15 }, () => ({ use: "", explanation: "" }))
   );
   const { surveyId, setSurveyId } = useSurvey();
 
@@ -30,10 +30,10 @@ function AUT() {
     );
 
     // Simple client-side validation
-    if (useCases.some((uc) => !uc.use.trim() || !uc.explanation.trim())) {
-      alert("All fields must be filled out.");
-      return;
-    }
+    // if (useCases.some((uc) => !uc.use.trim() || !uc.explanation.trim())) {
+    //   alert("All fields must be filled out.");
+    //   return;
+    // }
 
     try {
       // console.log("PreSurveyId", preSurveyId);
