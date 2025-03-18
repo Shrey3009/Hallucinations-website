@@ -9,7 +9,7 @@ function SurveyForm() {
     age: "",
     email: "",
     gender: "",
-    address: "",
+    major: "",
     agreeToTerms: false,
   });
 
@@ -98,13 +98,13 @@ function SurveyForm() {
         <option value="female">Female</option>
         <option value="other">Other</option>
       </select>
-      <textarea
-        name="address"
-        placeholder="Address"
-        value={formData.address}
+      <input
+        name="major"
+        placeholder="Major"
+        value={formData.major}
         onChange={handleChange}
         className={styles.field}
-        style={{ height: "80px" }}
+        // style={{ height: "80px" }}
         required
       />
       <label className={styles.field}>
