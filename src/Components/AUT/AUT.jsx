@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./AUT.module.css"; // Importing the CSS module
 import { useNavigate, useLocation } from "react-router-dom";
 import Instructions from "../Instructions/Instructions";
 import { useSurvey } from "../../surveyIDContext";
+import * as XLSX from "xlsx";
+
 function AUT() {
   const [useCases, setUseCases] = useState(() =>
     Array.from({ length: 15 }, () => ({ use: "", explanation: "" }))
@@ -15,6 +17,41 @@ function AUT() {
 
   const preSurveyId = surveyId;
   // console.log("preSurveyId", preSurveyId);
+
+  const [data, setData] = useState([]); // State to store the entire dataset
+  const [randomString, setRandomString] = useState("");
+
+  useEffect(() => {
+    async function fetchAndParseXLSX() {
+      const response = await fetch("/src/assets/AUT_Database.xlsx");
+      const arrayBuffer = await response.arrayBuffer();
+
+      // Reading the file
+      const workbook = XLSX.read(arrayBuffer, { type: "buffer" });
+
+      // Convert first worksheet to JSON (assuming the first sheet is what you want)
+      const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+      const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+
+      // Save the entire dataset
+      setData(jsonData);
+      console.log("DATA: ", jsonData);
+
+      // Selecting a random string from the first column of a random row
+      if (jsonData.length > 0) {
+        const randomIndex = Math.floor(Math.random() * jsonData.length);
+        setRandomString(jsonData[randomIndex][0]);
+        const data = [
+          ...data.slice(0, randomIndex),
+          ...data.slice(randomIndex + 1),
+        ];
+        // Update local state (optional, if you want to see the array post removal in ComponentA)
+        // setData(newArray);
+      }
+    }
+
+    fetchAndParseXLSX();
+  }, []);
 
   const handleChange = (index, type, value) => {
     const newUseCases = [...useCases];
@@ -43,10 +80,14 @@ function AUT() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ useCases, preSurveyId: preSurveyId }),
+        body: JSON.stringify({
+          useCases,
+          preSurveyId: preSurveyId,
+          object: randomString,
+        }),
       });
       if (response.ok) {
-        navigate("/Task2Page");
+        navigate("/Task2Page", { state: { data: data } });
       } else {
         alert("Failed to submit form");
       }
@@ -72,7 +113,7 @@ function AUT() {
             alt="Bicycle Pump"
             className={styles.image}
           /> */}
-          <h2 className={styles.title}>BICYCLE PUMP</h2>
+          <h2 className={styles.title}>{randomString}</h2>
         </div>
         <form onSubmit={handleSubmit}>
           {useCases.map((item, index) => (
