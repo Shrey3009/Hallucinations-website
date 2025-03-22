@@ -46,7 +46,7 @@ function AUT() {
         body: JSON.stringify({ useCases, preSurveyId: preSurveyId }),
       });
       if (response.ok) {
-        navigate("/AUT_gpt");
+        navigate("/Task2Page");
       } else {
         alert("Failed to submit form");
       }
@@ -60,18 +60,18 @@ function AUT() {
     <>
       <Instructions />
       <div className={styles.container}>
-        <h1>AUT</h1>
-        <p className={styles.quesion}>
+        <h1>TASK 1</h1>
+        <p>
           List as many alternative uses as possible for the following objects
           and provide a reasonable explanation for each use:
         </p>
         <br></br>
         <div className={styles.header}>
-          <img
+          {/* <img
             src="../../assets/bicycle-pump.png"
             alt="Bicycle Pump"
             className={styles.image}
-          />
+          /> */}
           <h2 className={styles.title}>BICYCLE PUMP</h2>
         </div>
         <form onSubmit={handleSubmit}>

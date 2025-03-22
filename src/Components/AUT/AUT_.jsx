@@ -3,7 +3,7 @@ import styles from "./AUT_.module.css"; // Importing the CSS module
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSurvey } from "../../surveyIDContext";
 
-function AUT({ round, onStateChange }) {
+function AUT({ round, onStateChange, task }) {
   const [useCases, setUseCases] = useState(() =>
     Array.from({ length: 15 }, () => ({ use: "", explanation: "" }))
   );
@@ -86,7 +86,7 @@ function AUT({ round, onStateChange }) {
   return (
     <>
       <div className={styles.container}>
-        <h1>AUT</h1>
+        <h1>Task {task}</h1>
         <p>
           List as many alternative uses as possible for the following objects
           and provide a reasonable explanation for each use:

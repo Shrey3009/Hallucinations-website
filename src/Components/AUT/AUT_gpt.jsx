@@ -58,7 +58,7 @@ function AUT_gpt() {
         />
         <div className={styles.bottom_container}>
           <div className={styles.aut_component}>
-            <AUT_ round={round} onStateChange={setRound} />
+            <AUT_ round={round} onStateChange={setRound} task={task} />
           </div>
           <div className={styles.chat}>
             <Chatbot_new
