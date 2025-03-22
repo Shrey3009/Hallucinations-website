@@ -90,6 +90,7 @@ function AUT_gpt() {
               onStateChange={setRound}
               task={task}
               randomString={randomString}
+              temperature={temperature}
             />
           </div>
           <div className={styles.chat}>

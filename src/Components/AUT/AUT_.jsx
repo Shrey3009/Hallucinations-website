@@ -3,7 +3,7 @@ import styles from "./AUT_.module.css"; // Importing the CSS module
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSurvey } from "../../surveyIDContext";
 
-function AUT({ round, onStateChange, task, randomString }) {
+function AUT({ round, onStateChange, task, randomString, temperature }) {
   const [useCases, setUseCases] = useState(() =>
     Array.from({ length: 15 }, () => ({ use: "", explanation: "" }))
   );
@@ -34,6 +34,7 @@ function AUT({ round, onStateChange, task, randomString }) {
     preSurveyId: surveyId,
     round: round, // Include the round in the JSON body
     object: randomString,
+    temperature: temperature,
   };
 
   const handleChange = (index, type, value) => {
