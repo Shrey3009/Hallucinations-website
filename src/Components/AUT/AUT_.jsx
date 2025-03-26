@@ -35,6 +35,7 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
     round: round, // Include the round in the JSON body
     object: randomString,
     temperature: temperature,
+    task: task,
   };
 
   const handleChange = (index, type, value) => {
