@@ -22,25 +22,19 @@ function AUT_gpt() {
   const [randomString, setRandomString] = useState("");
 
   useEffect(() => {
-    async function fetchAndParseXLSX() {
-      // Save the entire dataset
-      // console.log("Object: ", objectArray);
-      // console.log("DATA: ", data);
-      // Selecting a random string from the first column of a random row
-      if (objectArray.length > 0) {
-        const randomIndex = Math.floor(Math.random() * objectArray.length);
-        setRandomString(objectArray[randomIndex][0]);
-        const newArray = [
-          ...data.slice(0, randomIndex),
-          ...data.slice(randomIndex + 1),
-        ];
-        // Update local state (optional, if you want to see the array post removal in ComponentA)
-        setObjectArray(newArray);
-      }
-    }
+    if (data.length > 0) {
+      console.log("DATA inside IF: ");
+      const randomIndex = Math.floor(Math.random() * data.length);
+      setRandomString(data[randomIndex]);
 
-    fetchAndParseXLSX();
-  }, [task]);
+      const newData = [
+        ...data.slice(0, randomIndex),
+        ...data.slice(randomIndex + 1),
+      ];
+
+      setObjectArray(newData);
+    }
+  }, [task]); // Dependency on 'data'
 
   const random_temp = () => {
     setRandomIndex(Math.floor(Math.random() * tempsArray.length));
