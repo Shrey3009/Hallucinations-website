@@ -36,7 +36,7 @@ function chatbot({ task, resetToggle, onReset, temperature }) {
     console.log("TEMPERATURE OF GPT = ", temperature);
   }, [temperature]);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (resetToggle) {
       console.log("Attempting to reset chatbot");
       setMessages([
@@ -46,6 +46,7 @@ function chatbot({ task, resetToggle, onReset, temperature }) {
           sender: "ChatGPT",
         },
       ]); // Reset messages or other state
+      await postChatGPTMessages(messages);
       onReset(); // Call onReset to toggle reset state back
     }
   }, [resetToggle, onReset]);
