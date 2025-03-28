@@ -79,7 +79,7 @@ function chatbot({ task, resetToggle, onReset, temperature }) {
       task: task,
       chatMessages: chatMessages,
     };
-
+    console.log("BodyData: ", bodyData);
     try {
       let NODE_api = import.meta.env.VITE_NODE_API + "/chatbotmessages";
       const response = await fetch(NODE_api, {
