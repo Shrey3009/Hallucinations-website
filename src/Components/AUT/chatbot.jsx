@@ -41,7 +41,7 @@ function Chatbot({ task, resetToggle, onReset, temperature }) {
           sender: "ChatGPT",
         },
       ];
-      await postChatGPTMessages(initialMessages);
+      await postChatGPTMessages(messages);
       setMessages(initialMessages);
       onReset();
     };
