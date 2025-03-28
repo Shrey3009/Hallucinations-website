@@ -41,7 +41,7 @@ function Chatbot({ task, resetToggle, onReset, temperature }) {
           sender: "ChatGPT",
         },
       ];
-      await postChatGPTMessages(messages);
+      // await postChatGPTMessages(messages);
       setMessages(initialMessages);
       onReset();
     };
@@ -50,6 +50,12 @@ function Chatbot({ task, resetToggle, onReset, temperature }) {
       resetMessages();
     }
   }, [resetToggle, onReset]);
+
+  useEffect(() => {
+    if (task > 2) {
+      postChatGPTMessages(messages);
+    }
+  }, [task]);
 
   const handleSend = async (message) => {
     const newMessage = { message, sender: "user" };
@@ -61,7 +67,8 @@ function Chatbot({ task, resetToggle, onReset, temperature }) {
 
   async function postChatGPTMessages(chatMessages) {
     console.log("Inside chatbot: ", chatMessages);
-    const bodyData = { preSurveyId: surveyId, task, chatMessages };
+    // let temp = task;
+    const bodyData = { preSurveyId: surveyId, task: task - 1, chatMessages };
     console.log("BodyData: ", bodyData);
 
     try {

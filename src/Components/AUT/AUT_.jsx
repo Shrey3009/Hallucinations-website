@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./AUT_.module.css"; // Importing the CSS module
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSurvey } from "../../surveyIDContext";
@@ -44,8 +44,36 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
     setUseCases(newUseCases);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const [timeLeft, setTimeLeft] = useState(180); // 180 seconds = 3 minutes
+
+  useEffect(() => {
+    // If timeLeft is 0, submit the form/data
+    if (timeLeft === 0) {
+      console.log("handle submit when timer is 0");
+      handleSubmit();
+      setTimeLeft(180);
+    }
+
+    // Set interval to countdown the timer
+    const intervalId = setInterval(() => {
+      setTimeLeft(timeLeft - 1);
+    }, 1000);
+
+    // Clear interval on re-render to prevent memory leaks
+    return () => clearInterval(intervalId);
+
+    // Add timeLeft as a dependency to reset interval when timeLeft changes
+  }, [timeLeft]);
+
+  // Convert seconds into minutes and seconds for display
+  const formatTime = () => {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    return `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
+  };
+
+  const handleSubmit = async () => {
+    // e.preventDefault();
     console.log("Sending data:", JSON.stringify({ bodyData }));
 
     // Simple client-side validation
@@ -103,6 +131,7 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
           /> */}
           <h2 className={styles.title}>{randomString}</h2>
         </div>
+        <p>Form will be submitted automatically in: {formatTime()}</p>
         <form onSubmit={handleSubmit}>
           {useCases.map((item, index) => (
             <div key={index} className={styles.useCaseGroup}>
