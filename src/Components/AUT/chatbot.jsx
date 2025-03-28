@@ -68,7 +68,9 @@ function chatbot({ task, resetToggle, onReset, temperature }) {
   };
 
   useEffect(async () => {
-    await postChatGPTMessages(messages);
+    if (task > 1) {
+      await postChatGPTMessages(messages);
+    }
   }, [task]);
 
   // To make adatabase with all the messages
