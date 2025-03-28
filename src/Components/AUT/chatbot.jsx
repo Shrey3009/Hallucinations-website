@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import styles from "./chatbot.module.css";
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
 import {
@@ -9,6 +9,7 @@ import {
   MessageInput,
   TypingIndicator,
 } from "@chatscope/chat-ui-kit-react";
+import { useSurvey } from "../../surveyIDContext";
 
 let API_KEY = import.meta.env.VITE_API_KEY;
 // console.log("API_KEY : ", API_KEY);
@@ -20,7 +21,7 @@ const systemMessage = {
     "Explain things like you're talking to a software professional with 2 years of experience.",
 };
 
-function chatbot({ resetToggle, onReset, temperature }) {
+function chatbot({ task, resetToggle, onReset, temperature }) {
   const [messages, setMessages] = useState([
     {
       message: "Hello, I'm ChatGPT! Ask me anything!",
@@ -29,6 +30,7 @@ function chatbot({ resetToggle, onReset, temperature }) {
     },
   ]);
   const [isTyping, setIsTyping] = useState(false);
+  const { surveyId, setSurveyId } = useSurvey();
 
   useEffect(() => {
     console.log("TEMPERATURE OF GPT = ", temperature);
@@ -64,6 +66,44 @@ function chatbot({ resetToggle, onReset, temperature }) {
     setIsTyping(true);
     await processMessageToChatGPT(newMessages);
   };
+
+  useEffect(async () => {
+    await postChatGPTMessages(messages);
+  }, [task]);
+
+  // To make adatabase with all the messages
+  async function postChatGPTMessages(chatMessages) {
+    console.log("Inside chatbot: ", chatMessages);
+    const bodyData = {
+      preSurveyId: surveyId,
+      task: task,
+      chatMessages: chatMessages,
+    };
+
+    try {
+      let NODE_api = import.meta.env.VITE_NODE_API + "/chatbotmessages";
+      const response = await fetch(NODE_api, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyData),
+      });
+
+      if (response.ok) {
+        response.json().then((body) => {
+          console.log(body); // Log the body of the response
+          // setInputValue(""); // Clear the input field
+          console.log("Submitted chat Messages for task ", task);
+        });
+      } else {
+        alert("Failed to post chat messages");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Failed to post chat messages due to an error.");
+    }
+  }
 
   async function processMessageToChatGPT(chatMessages) {
     // messages is an array of messages

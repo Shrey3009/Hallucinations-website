@@ -89,6 +89,7 @@ function AUT_gpt() {
           </div>
           <div className={styles.chat}>
             <Chatbot_new
+              task={task}
               resetToggle={resetToggle}
               onReset={() => setResetToggle(false)}
               temperature={temperature}
