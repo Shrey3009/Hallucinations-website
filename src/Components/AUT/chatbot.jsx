@@ -67,12 +67,6 @@ function chatbot({ task, resetToggle, onReset, temperature }) {
     await processMessageToChatGPT(newMessages);
   };
 
-  useEffect(async () => {
-    if (task > 1) {
-      await postChatGPTMessages(messages);
-    }
-  }, [task]);
-
   // To make adatabase with all the messages
   async function postChatGPTMessages(chatMessages) {
     console.log("Inside chatbot: ", chatMessages);
@@ -106,6 +100,12 @@ function chatbot({ task, resetToggle, onReset, temperature }) {
       alert("Failed to post chat messages due to an error.");
     }
   }
+
+  // useEffect(async () => {
+  //   if (task > 1) {
+  //     await postChatGPTMessages(messages);
+  //   }
+  // }, [task]);
 
   async function processMessageToChatGPT(chatMessages) {
     // messages is an array of messages
