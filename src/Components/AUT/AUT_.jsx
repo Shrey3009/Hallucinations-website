@@ -72,8 +72,8 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
     return `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
   };
 
-  const handleSubmit = async () => {
-    // e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     console.log("Sending data:", JSON.stringify({ bodyData }));
 
     // Simple client-side validation
@@ -92,7 +92,7 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
         },
         body: JSON.stringify(bodyData),
       });
-
+      console.log("response from node AUT_gpt: ", response);
       if (response.ok) {
         response.json().then((body) => {
           console.log(body); // Log the body of the response

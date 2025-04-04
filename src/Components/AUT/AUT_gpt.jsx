@@ -5,7 +5,7 @@ import Instructions from "../Instructions/Instructions";
 import { useNavigate, useLocation } from "react-router-dom";
 import AUT_ from "./AUT_";
 import styles from "./organize.module.css"; // Importing the CSS module
-import * as XLSX from "xlsx";
+import { useData } from "../../dataContext";
 
 function AUT_gpt() {
   const [round, setRound] = useState(1); // Manage round as state
@@ -16,23 +16,32 @@ function AUT_gpt() {
   const [randomIndex, setRandomIndex] = useState();
   const navigate = useNavigate();
 
-  const location = useLocation();
-  const { data } = location.state || [];
+  // const location = useLocation();
+  // const { data } = location.state || [];
+
+  const { data, setData } = useData();
   const [objectArray, setObjectArray] = useState(data); // State to store the entire dataset
   const [randomString, setRandomString] = useState("");
 
   useEffect(() => {
-    if (data.length > 0) {
-      console.log("DATA inside IF: ");
-      const randomIndex = Math.floor(Math.random() * data.length);
-      setRandomString(data[randomIndex]);
+    console.log(
+      "DATA in AUT_gpt when task is and preSurveyID: ",
+      task,
+      objectArray
+    );
+    if (objectArray) {
+      if (objectArray.length > 0) {
+        console.log("DATA inside IF: ");
+        const randomIndex = Math.floor(Math.random() * objectArray.length);
+        setRandomString(objectArray[randomIndex]);
 
-      const newData = [
-        ...data.slice(0, randomIndex),
-        ...data.slice(randomIndex + 1),
-      ];
+        const newData = [
+          ...data.slice(0, randomIndex),
+          ...data.slice(randomIndex + 1),
+        ];
 
-      setObjectArray(newData);
+        setObjectArray(newData);
+      }
     }
   }, [task]); // Dependency on 'data'
 
@@ -47,12 +56,12 @@ function AUT_gpt() {
 
   useEffect(() => {
     setTemps_Array((prev) => prev.filter((_, index) => index !== randomIndex));
+    console.log("RANDOMISED TEMPERATURE: ", temperature);
+    console.log("TEMP ARRAY: ", tempsArray);
   }, [temperature]);
 
   useEffect(() => {
     random_temp(); // Initialize temperature
-    // console.log("RANDOMISED TEMPERATURE: ", temperature);
-    // console.log("TEMP ARRAY: ", tempsArray);
 
     if (task === 5) {
       navigate("/PostSurvey");

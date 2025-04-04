@@ -9,6 +9,7 @@ function Task2Page() {
   const navigateToTask = async () => {
     // Navigate to the next task
     console.log("Navigating to the next task");
+    console.log("DATA: ", data);
     // console.log("Data in Task: ", data);
     navigate("/AUT_gpt", { state: { data: data } });
   };
