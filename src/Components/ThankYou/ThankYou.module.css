@@ -1,0 +1,163 @@
+.pageContainer {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 2rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: slideUp 0.6s ease-out;
+}
+
+.content {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.checkmarkContainer {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 2rem;
+  background-color: #4caf50;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: scaleIn 0.5s ease-out 0.3s both;
+}
+
+.checkmark {
+  color: white;
+  font-size: 2.5rem;
+  animation: fadeIn 0.3s ease-out 0.8s both;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  animation: fadeIn 0.5s ease-out 0.6s both;
+}
+
+.message {
+  font-size: 1.2rem;
+  color: #6c757d;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+  animation: fadeIn 0.5s ease-out 0.9s both;
+}
+
+.details {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  animation: fadeIn 0.5s ease-out 1.2s both;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.list li {
+  padding: 0.75rem 0;
+  color: #495057;
+  position: relative;
+  padding-left: 2rem;
+  line-height: 1.5;
+}
+
+.list li::before {
+  content: "•";
+  color: #4caf50;
+  font-size: 1.5rem;
+  position: absolute;
+  left: 0.5rem;
+  top: 0.5rem;
+}
+
+.contact {
+  color: #6c757d;
+  animation: fadeIn 0.5s ease-out 1.5s both;
+}
+
+.email {
+  color: #4caf50;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin: 1rem;
+  }
+
+  .content {
+    padding: 2rem 1.5rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .message {
+    font-size: 1.1rem;
+  }
+
+  .details {
+    padding: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.3rem;
+  }
+}

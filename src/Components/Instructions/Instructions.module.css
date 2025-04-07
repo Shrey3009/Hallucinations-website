@@ -1,16 +1,130 @@
 .container {
-  display: flex;
-  flex-direction: column;
-  width: 90%;
-  margin: auto;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  font-family: Arial, sans-serif;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
 
-  h1 {
-    /* font-size: 24px; */
-    color: #333;
-    text-align: center;
-    justify-content: center;
+.title {
+  font-size: 2rem;
+  color: var(--text-color);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.taskNumber {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.instructionCard {
+  background-color: var(--background-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.text {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+}
+
+.examples {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.example {
+  background-color: var(--background-color-light);
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.example h4 {
+  font-size: 1rem;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.example p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.option {
+  background-color: var(--background-color-light);
+  border-radius: 6px;
+  padding: 1.25rem;
+  transition: transform 0.2s ease;
+}
+
+.option:hover {
+  transform: translateY(-2px);
+}
+
+.option h4 {
+  font-size: 1.1rem;
+  color: var(--primary-color);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.option p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.note {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  background-color: var(--background-color-light);
+  border-left: 4px solid var(--primary-color);
+  padding: 1rem;
+  margin-top: 1.5rem;
+  border-radius: 0 4px 4px 0;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  .examples {
+    grid-template-columns: 1fr;
+  }
+
+  .options {
+    grid-template-columns: 1fr;
+  }
+
+  .title {
+    font-size: 1.75rem;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
   }
 }

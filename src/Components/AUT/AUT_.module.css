@@ -1,71 +1,253 @@
 /* UseCaseForm.module.css */
+.pageContainer {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 2rem 1rem;
+}
+
 .container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.taskHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.taskTitle {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-primary);
+}
+
+.taskDescription {
+  font-size: 1.2rem;
+  color: #6c757d;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  font-family: var(--font-primary);
+}
+
+.objectCard {
+  background-color: #4a90e2;
+  color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  margin: 0 auto;
+  max-width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.objectCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.objectName {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-primary);
+}
+
+.useCaseForm {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
-  width: 80%;
-  margin: auto;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  font-family: Arial, sans-serif;
-
-  h1 {
-    /* font-size: 24px; */
-    color: #333;
-    text-align: center;
-    justify-content: center;
-  }
-
-  p {
-    width: 70%; /* Adjust width as needed for your design */
-    margin: 0 auto; /* Horizontally center the block within its container */
-    text-align: left; /* Center the text within the paragraph block */
-    word-wrap: break-word;
-  }
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.title {
-  font-size: 24px;
-  color: #333;
-}
-
-.image {
-  width: 50px; /* Adjust as needed */
-  height: auto;
-  margin-bottom: 10px;
+  gap: 1.5rem;
+  margin-top: 3rem;
 }
 
 .useCaseGroup {
-  flex-direction: row;
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  gap: 1rem;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 1.25rem;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  transition: all 0.2s ease;
+}
+
+.useCaseGroup:hover {
+  border-color: #4a90e2;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.useCaseNumber {
+  background-color: #4a90e2;
+  color: white;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  font-family: var(--font-primary);
+}
+
+.inputGroup {
+  flex-grow: 1;
+  display: flex;
+  gap: 1rem;
 }
 
 .inputField {
   flex: 1;
-  margin-right: 10px;
-  padding: 8px;
-  font-size: 16px;
-  border: 1px solid #ccc;
+  padding: 0.875rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: white;
+  color: #2c3e50;
+  transition: all 0.2s ease;
+  font-family: var(--font-primary);
 }
 
-.inputField:last-child {
-  margin-right: 0;
+.inputField:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.inputField::placeholder {
+  color: #adb5bd;
+  opacity: 0.8;
+}
+
+.timer {
+  text-align: center;
+  margin: 1rem 0;
+  font-size: 1.2rem;
+  color: #2c3e50;
+  font-family: var(--font-primary);
+}
+
+.submitContainer {
+  margin-top: 3rem;
+  text-align: center;
 }
 
 .submitButton {
-  padding: 10px 50px;
-  font-size: 16px;
-  background-color: yellow;
+  background-color: #4a90e2;
+  color: white;
   border: none;
+  border-radius: 8px;
+  padding: 1rem 3rem;
+  font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
-  border-radius: 50px;
-  /* justify-content: center; */
-  /* text-align: center; */
+  transition: all 0.2s ease;
+  font-family: var(--font-primary);
+}
+
+.submitButton:hover {
+  background-color: #357abd;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.submitButton:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.submitButton:disabled {
+  background-color: #e9ecef;
+  color: #adb5bd;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+  align-items: center;
+}
+
+.addButton {
+  background-color: #f8f9fa;
+  color: #4a90e2;
+  border: 2px solid #4a90e2;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-primary);
+}
+
+.addButton:hover {
+  background-color: #4a90e2;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.addButton:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 1rem;
+  }
+
+  .container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .taskTitle {
+    font-size: 2rem;
+  }
+
+  .taskDescription {
+    font-size: 1.1rem;
+  }
+
+  .objectCard {
+    padding: 1.5rem;
+  }
+
+  .objectName {
+    font-size: 1.5rem;
+  }
+
+  .useCaseGroup {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  .inputGroup {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .useCaseNumber {
+    margin-bottom: 0.5rem;
+  }
+
+  .submitButton {
+    width: 100%;
+    padding: 1rem;
+  }
 }

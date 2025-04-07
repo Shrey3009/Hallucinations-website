@@ -6,7 +6,8 @@ import Chatbot from "./Components/AUT/chat_bot";
 import AUT_gpt from "./Components/AUT/AUT_gpt";
 import PostSurvey from "./Components/PostSurvey/PostSurvey";
 import WelcomePage from "./Components/LoadingPage/WelcomePage";
-import Task2Page from "./Components/LoadingPage/Task2Page";
+import Task2Page from "./Components/Task2Page/Task2Page";
+import ThankYou from "./Components/ThankYou/ThankYou";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/PostSurvey" element={<PostSurvey />} />
         <Route path="WelcomePage" element={<WelcomePage />} />
         <Route path="/Task2Page" element={<Task2Page />} />
+        <Route path="/ThankYou" element={<ThankYou />} />
       </Routes>
     </Router>
   );

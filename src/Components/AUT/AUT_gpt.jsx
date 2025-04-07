@@ -23,6 +23,16 @@ function AUT_gpt() {
   const [objectArray, setObjectArray] = useState(data); // State to store the entire dataset
   const [randomString, setRandomString] = useState("");
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Scroll to top when round changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [round]);
+
   useEffect(() => {
     console.log(
       "DATA in AUT_gpt when task is and preSurveyID: ",

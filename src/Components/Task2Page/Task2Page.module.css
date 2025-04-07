@@ -1,0 +1,170 @@
+.pageContainer {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 2rem 1rem;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-primary);
+}
+
+.description {
+  font-size: 1.2rem;
+  color: #6c757d;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: var(--font-primary);
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.card {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  font-family: var(--font-primary);
+}
+
+.taskList,
+.notesList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+}
+
+.taskList li,
+.notesList li {
+  padding: 0.75rem 0;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  font-family: var(--font-primary);
+}
+
+.taskList li::before,
+.notesList li::before {
+  content: "•";
+  color: #4a90e2;
+  font-weight: bold;
+  margin-right: 0.75rem;
+  font-size: 1.5rem;
+}
+
+.note {
+  font-size: 1rem;
+  color: #6c757d;
+  font-style: italic;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #dee2e6;
+  font-family: var(--font-primary);
+}
+
+.buttonContainer {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.startButton {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 1.25rem 3rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: var(--font-primary);
+}
+
+.startButton:hover {
+  background-color: #357abd;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.startButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 1.1rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+
+  .cardTitle {
+    font-size: 1.25rem;
+  }
+
+  .taskList li,
+  .notesList li {
+    font-size: 1rem;
+  }
+
+  .startButton {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    width: 100%;
+  }
+}
