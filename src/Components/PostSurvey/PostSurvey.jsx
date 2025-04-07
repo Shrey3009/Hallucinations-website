@@ -52,21 +52,21 @@ function PostSurvey() {
       const data = await response.json();
       console.log("data", data);
       if (!response.ok) {
-        if (data.errors) {
-          const newErrors = {};
-          // Check if data.errors is an array before using forEach
-          if (Array.isArray(data.errors)) {
-            data.errors.forEach((error) => {
-              const field = error.toLowerCase().split(" ")[0];
-              newErrors[field] = error;
-            });
-          } else {
-            // Handle case where errors is not an array
-            newErrors.form = "Invalid error format received from server";
-          }
-          setErrors(newErrors);
-          throw new Error("Please correct the highlighted errors");
-        }
+        // if (data.errors) {
+        //   const newErrors = {};
+        //   // Check if data.errors is an array before using forEach
+        //   if (Array.isArray(data.errors)) {
+        //     data.errors.forEach((error) => {
+        //       const field = error.toLowerCase().split(" ")[0];
+        //       newErrors[field] = error;
+        //     });
+        //   } else {
+        //     // Handle case where errors is not an array
+        //     newErrors.form = "Invalid error format received from server";
+        //   }
+        //   setErrors(newErrors);
+        //   throw new Error("Please correct the highlighted errors");
+        // }
         throw new Error(data.message || "Failed to submit form");
       }
 
