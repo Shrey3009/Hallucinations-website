@@ -97,7 +97,11 @@ function Chatbot({ task, resetToggle, onReset, temperature }) {
     const apiRequestBody = {
       model: "gpt-4o-mini",
       messages: [systemMessage, ...apiMessages],
-      temperature,
+      temperature: temperature,
+      top_p: 1,
+      max_tokens: 2048,
+      frequency_penalty: 0,
+      presence_penalty: 0,
     };
 
     try {
