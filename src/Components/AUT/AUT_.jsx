@@ -15,7 +15,6 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
     // If timeLeft is 0, submit the form/data
     if (timeLeft === 0) {
       handleSubmit();
-      setTimeLeft(195);
     }
 
     // Set interval to countdown the timer
@@ -72,6 +71,7 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
         setUseCases(() =>
           Array.from({ length: 3 }, () => ({ use: "", explanation: "" }))
         );
+        setTimeLeft(195);
         onStateChange(round + 1);
       } else {
         alert("Failed to submit form");
