@@ -15,6 +15,13 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.logo {
+  width: 350px;
+  height: auto;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
 .title {
   text-align: center;
   color: #333;

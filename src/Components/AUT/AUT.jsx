@@ -14,7 +14,7 @@ function AUT() {
   const preSurveyId = surveyId;
   const { data, setData } = useData();
   const [randomString, setRandomString] = useState("");
-  const [timeLeft, setTimeLeft] = useState(180); // 180 seconds = 3 minutes
+  const [timeLeft, setTimeLeft] = useState(195); // 180 seconds = 3 minutes
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -37,7 +37,7 @@ function AUT() {
     // If timeLeft is 0, submit the form/data
     if (timeLeft === 0) {
       handleSubmit();
-      setTimeLeft(180);
+      setTimeLeft(195);
     }
 
     // Set interval to countdown the timer

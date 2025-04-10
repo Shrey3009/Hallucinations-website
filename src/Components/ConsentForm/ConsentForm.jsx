@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./ConsentForm.module.css";
+import logo from "../../assets/Web-Logo-Costello-College-of-Business.png";
 
 function ConsentForm() {
   const [consent, setConsent] = useState("");
@@ -28,7 +29,7 @@ function ConsentForm() {
   return (
     <div className={styles.pageContainer}>
       <div className={styles.container}>
-        <h1 className={styles.title}>Consent Form</h1>
+        <img src={logo} alt="Web Logo" className={styles.logo} />
 
         <div className={styles.content}>
           <section className={styles.section}>

@@ -9,13 +9,13 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
   );
   const { surveyId } = useSurvey();
   const preSurveyId = surveyId;
-  const [timeLeft, setTimeLeft] = useState(180); // 180 seconds = 3 minutes
+  const [timeLeft, setTimeLeft] = useState(195); // 180 seconds = 3 minutes
 
   useEffect(() => {
     // If timeLeft is 0, submit the form/data
     if (timeLeft === 0) {
       handleSubmit();
-      setTimeLeft(180);
+      setTimeLeft(195);
     }
 
     // Set interval to countdown the timer
