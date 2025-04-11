@@ -11,6 +11,11 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
   const preSurveyId = surveyId;
   const [timeLeft, setTimeLeft] = useState(195); // 180 seconds = 3 minutes
 
+  // Reset timer when round changes
+  useEffect(() => {
+    setTimeLeft(195);
+  }, [round]);
+
   useEffect(() => {
     // If timeLeft is 0, submit the form/data
     if (timeLeft === 0) {
