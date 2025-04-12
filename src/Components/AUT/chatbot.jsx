@@ -31,28 +31,31 @@ function Chatbot({ task, resetToggle, onReset, temperature }) {
   const [isTyping, setIsTyping] = useState(false);
   const { surveyId } = useSurvey();
 
-  // Single useEffect to handle both reset and task completion
   useEffect(() => {
-    const handleResetAndTaskCompletion = async () => {
-      if (resetToggle) {
-        console.log("Resetting chatbot messages");
-        const initialMessages = [
-          {
-            message: "Hello, I'm ChatGPT! Ask me anything!",
-            direction: "incoming",
-            sender: "ChatGPT",
-          },
-        ];
-        setMessages(initialMessages);
-        onReset();
-      } else if (task > 2) {
-        console.log("Submitting chat messages for task", task);
-        await postChatGPTMessages(messages);
-      }
+    const resetMessages = async () => {
+      console.log("Attempting to reset chatbot");
+      const initialMessages = [
+        {
+          message: "Hello, I'm ChatGPT! Ask me anything!",
+          direction: "incoming",
+          sender: "ChatGPT",
+        },
+      ];
+      // await postChatGPTMessages(messages);
+      setMessages(initialMessages);
+      onReset();
     };
 
-    handleResetAndTaskCompletion();
-  }, [resetToggle, task, messages, onReset]);
+    if (resetToggle) {
+      resetMessages();
+    }
+  }, [resetToggle, onReset]);
+
+  useEffect(() => {
+    if (task > 2) {
+      postChatGPTMessages(messages);
+    }
+  }, [task]);
 
   const handleSend = async (message) => {
     const newMessage = { message, sender: "user" };
@@ -64,6 +67,7 @@ function Chatbot({ task, resetToggle, onReset, temperature }) {
 
   async function postChatGPTMessages(chatMessages) {
     console.log("Inside chatbot: ", chatMessages);
+    // let temp = task;
     const bodyData = { preSurveyId: surveyId, task: task - 1, chatMessages };
     console.log("BodyData: ", bodyData);
 
