@@ -17,7 +17,7 @@ const API_URL = import.meta.env.VITE_NODE_API + "/chatbotmessages";
 const systemMessage = {
   role: "system",
   content:
-    "Explain things like you're talking to a software professional with 2 years of experience.",
+    "You are a helpful AI assistant. Your responses should be clear, coherent, and in English. Help users brainstorm creative uses for everyday objects.",
 };
 
 function Chatbot({ task, resetToggle, onReset, temperature }) {
@@ -29,6 +29,7 @@ function Chatbot({ task, resetToggle, onReset, temperature }) {
     },
   ]);
   const [isTyping, setIsTyping] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const { surveyId } = useSurvey();
 
   useEffect(() => {
@@ -41,7 +42,6 @@ function Chatbot({ task, resetToggle, onReset, temperature }) {
           sender: "ChatGPT",
         },
       ];
-      // await postChatGPTMessages(messages);
       setMessages(initialMessages);
       onReset();
     };
@@ -57,17 +57,57 @@ function Chatbot({ task, resetToggle, onReset, temperature }) {
     }
   }, [task]);
 
+  const validateResponse = (content) => {
+    // Check if content is a string
+    if (typeof content !== "string") {
+      return false;
+    }
+    // Check if content contains mostly non-ASCII characters
+    const nonAsciiRatio =
+      content.split("").filter((char) => char.charCodeAt(0) > 127).length /
+      content.length;
+    if (nonAsciiRatio > 0.3) {
+      // If more than 30% non-ASCII characters
+      return false;
+    }
+    // Check minimum length
+    if (content.length < 10) {
+      return false;
+    }
+    return true;
+  };
+
   const handleSend = async (message) => {
+    if (isProcessing) return; // Prevent multiple submissions while processing
+
+    setIsProcessing(true);
+    setIsTyping(true);
+
     const newMessage = { message, sender: "user" };
     const updatedMessages = [...messages, newMessage];
     setMessages(updatedMessages);
-    setIsTyping(true);
-    await processMessageToChatGPT(updatedMessages);
+
+    try {
+      await processMessageToChatGPT(updatedMessages);
+    } catch (error) {
+      console.error("Error processing message:", error);
+      // Add error message to chat
+      setMessages((prev) => [
+        ...prev,
+        {
+          message: "I apologize, but I encountered an error. Please try again.",
+          direction: "incoming",
+          sender: "ChatGPT",
+        },
+      ]);
+    } finally {
+      setIsTyping(false);
+      setIsProcessing(false);
+    }
   };
 
   async function postChatGPTMessages(chatMessages) {
     console.log("Inside chatbot: ", chatMessages);
-    // let temp = task;
     const bodyData = { preSurveyId: surveyId, task: task - 1, chatMessages };
     console.log("BodyData: ", bodyData);
 
@@ -95,7 +135,7 @@ function Chatbot({ task, resetToggle, onReset, temperature }) {
     }));
 
     const apiRequestBody = {
-      model: "gpt-4o-mini",
+      model: "gpt-3.5-turbo", // Fixed model name
       messages: [systemMessage, ...apiMessages],
       temperature: temperature,
       top_p: 1,
@@ -116,17 +156,29 @@ function Chatbot({ task, resetToggle, onReset, temperature }) {
           body: JSON.stringify(apiRequestBody),
         }
       );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
+      const content = data.choices[0].message.content;
+
+      // Validate the response content
+      if (!validateResponse(content)) {
+        throw new Error("Invalid response received from API");
+      }
+
       const responseMessage = {
-        message: data.choices[0].message.content,
+        message: content,
         direction: "incoming",
         sender: "ChatGPT",
       };
-      setMessages([...chatMessages, responseMessage]);
-      setIsTyping(false);
+
+      setMessages((prevMessages) => [...prevMessages, responseMessage]);
     } catch (error) {
       console.error("Failed to fetch response from ChatGPT:", error);
-      setIsTyping(false);
+      throw error;
     }
   }
 
@@ -151,6 +203,7 @@ function Chatbot({ task, resetToggle, onReset, temperature }) {
               <MessageInput
                 placeholder="Type message here"
                 onSend={handleSend}
+                disabled={isProcessing}
               />
             </ChatContainer>
           </MainContainer>
