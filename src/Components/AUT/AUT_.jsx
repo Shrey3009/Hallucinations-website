@@ -9,11 +9,11 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
   );
   const { surveyId } = useSurvey();
   const preSurveyId = surveyId;
-  const [timeLeft, setTimeLeft] = useState(195); // 180 seconds = 3 minutes
+  const [timeLeft, setTimeLeft] = useState(180); // 180 seconds = 3 minutes
 
   // Reset timer when round changes
   useEffect(() => {
-    setTimeLeft(195);
+    setTimeLeft(180);
   }, [round]);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
           useCases,
           preSurveyId,
           round,
-          object: randomString,
+          patent: randomString,
           temperature,
           task,
         }),
@@ -76,7 +76,7 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
         setUseCases(() =>
           Array.from({ length: 3 }, () => ({ use: "", explanation: "" }))
         );
-        setTimeLeft(195);
+        setTimeLeft(180);
         onStateChange(round + 1);
       } else {
         alert("Failed to submit form");
@@ -90,14 +90,24 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
   return (
     <div className={styles.container}>
       <div className={styles.taskHeader}>
-        <h1 className={styles.taskTitle}>Task {task}: Alternative Uses</h1>
-        <p className={styles.taskDescription}>
-          List as many alternative uses as possible for the following object and
-          provide a reasonable explanation for each use:
-        </p>
-        <div className={styles.objectCard}>
-          <h2 className={styles.objectName}>{randomString}</h2>
+        <h1 className={styles.taskTitle}>
+          Task {task}: Patent Technology Applications
+        </h1>
+        <div className={styles.patentSection}>
+          <h2 className={styles.patentName}>
+            Patent Name: {randomString?.name || "Loading..."}
+          </h2>
+          <div className={styles.patentDescription}>
+            <h3>Patent Description:</h3>
+            <p>
+              {randomString?.description || "Loading patent description..."}
+            </p>
+          </div>
         </div>
+        <p className={styles.taskDescription}>
+          List three creative application ideas for how this technology could be
+          used in the real world.
+        </p>
         <div className={styles.timer}>Time remaining: {formatTime()}</div>
       </div>
 
@@ -108,7 +118,7 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
             <div className={styles.inputGroup}>
               <input
                 type="text"
-                placeholder="What's your alternative use?"
+                placeholder="What's your application idea?"
                 value={item.use}
                 onChange={(e) => handleChange(index, "use", e.target.value)}
                 className={styles.inputField}
@@ -127,15 +137,6 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
         ))}
 
         <div className={styles.buttonContainer}>
-          {useCases.length < 15 && (
-            <button
-              type="button"
-              onClick={addMoreUseCases}
-              className={styles.addButton}
-            >
-              Add More Use Cases
-            </button>
-          )}
           <button type="submit" className={styles.submitButton}>
             Submit Answers
           </button>

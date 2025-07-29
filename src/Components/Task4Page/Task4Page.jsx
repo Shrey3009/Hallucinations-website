@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import styles from "./Task2Page.module.css";
+import styles from "./Task4Page.module.css";
 import { useNavigate } from "react-router-dom";
 
-function Task2Page() {
+function Task4Page() {
   const navigate = useNavigate();
 
   // Scroll to top when component mounts
@@ -12,7 +12,7 @@ function Task2Page() {
 
   const handleStart = () => {
     window.scrollTo(0, 0);
-    navigate("/AUT_gpt");
+    navigate("/AUT4_gpt");
   };
 
   return (
@@ -20,7 +20,7 @@ function Task2Page() {
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>
-            Task 2: AI-Supported Creative Ideation
+            Task 4: AI-Supported Creative Ideation
           </h1>
           <p className={styles.description}>
             In this task, you will explore how a patent might be applied in
@@ -35,10 +35,6 @@ function Task2Page() {
             <ul className={styles.taskList}>
               <li>Round 1: Ask the AI for 3 possible application ideas</li>
               <li>Round 2: Reflect and build on AI's suggestions</li>
-              <li>
-                Round 3: Finalize your own set of 3 improved or original
-                applications
-              </li>
             </ul>
             <p className={styles.note}>
               Each round will have specific instructions on how to interact with
@@ -59,9 +55,8 @@ function Task2Page() {
                 allowed.
               </li>
               <li>
-                In Round 3, you should focus on finalizing your best three
-                ideas, integrating your thoughts and any useful insights from
-                the AI.
+                Focus on finalizing your best three ideas, integrating your
+                thoughts and any useful insights from the AI.
               </li>
               <li>
                 You are not evaluated on writing skills. Focus on creativity,
@@ -73,7 +68,7 @@ function Task2Page() {
 
         <div className={styles.buttonContainer}>
           <button className={styles.startButton} onClick={handleStart}>
-            Start Task 2
+            Start Task 4
           </button>
         </div>
       </div>
@@ -81,4 +76,4 @@ function Task2Page() {
   );
 }
 
-export default Task2Page;
+export default Task4Page;

@@ -12,17 +12,21 @@ function Instructions({ round, task }) {
           <>
             <h3 className={styles.subtitle}>Initial Interaction</h3>
             <p className={styles.text}>
-              You are allowed only one prompt to interact with the AI. Your
-              prompt must not ask for more than 3 answers.
+              Please follow the correct format when interacting with the AI: You
+              are allowed to submit only one prompt to the AI in this round.
+            </p>
+            <p className={styles.text}>
+              In your prompt, you may request up to 3 applications of the
+              provided patent - no more.
             </p>
             <div className={styles.examples}>
               <div className={styles.example}>
                 <h4>✅ Allowed Example:</h4>
-                <p>"What are 3 alternative uses for a paperclip?"</p>
+                <p>"Please give me 3 applications of this patent."</p>
               </div>
               <div className={styles.example}>
-                <h4>❌ Not Allowed Example:</h4>
-                <p>"Give me 5 alternative uses for a paperclip."</p>
+                <h4>❌ Not Allowed:</h4>
+                <p>"Please give me 5 applications of this patent."</p>
               </div>
             </div>
             <p className={styles.note}>
@@ -59,40 +63,6 @@ function Instructions({ round, task }) {
             </div>
             <p className={styles.note}>
               Write down your additional answers in the Round 2 section.
-            </p>
-          </>
-        )}
-
-        {round === 3 && (
-          <>
-            <h3 className={styles.subtitle}>Final Refinement</h3>
-            <p className={styles.text}>
-              Continue building on previous responses. You cannot introduce new
-              questions or topics.
-            </p>
-            <div className={styles.options}>
-              <div className={styles.option}>
-                <h4>🔨 Build upon:</h4>
-                <p>
-                  Add details or further develop the ideas from previous rounds.
-                </p>
-              </div>
-              <div className={styles.option}>
-                <h4>✨ Refine:</h4>
-                <p>
-                  Modify or improve suggestions to make them clearer, more
-                  specific, or more unique.
-                </p>
-              </div>
-              <div className={styles.option}>
-                <h4>🌱 Expand:</h4>
-                <p>
-                  Think of additional uses inspired by the previous outputs.
-                </p>
-              </div>
-            </div>
-            <p className={styles.note}>
-              Write down your additional answers in the Round 3 section.
             </p>
           </>
         )}

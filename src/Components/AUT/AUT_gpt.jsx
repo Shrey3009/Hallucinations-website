@@ -15,9 +15,7 @@ function AUT_gpt() {
   const [resetToggle, setResetToggle] = useState(false);
   const [randomIndex, setRandomIndex] = useState();
   const navigate = useNavigate();
-
-  // const location = useLocation();
-  // const { data } = location.state || [];
+  const location = useLocation();
 
   const { data, setData } = useData();
   const [objectArray, setObjectArray] = useState(data); // State to store the entire dataset
@@ -26,6 +24,10 @@ function AUT_gpt() {
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
+    // Set task from location state if provided
+    if (location.state?.task) {
+      setTask(location.state.task);
+    }
   }, []);
 
   // Scroll to top when round changes
@@ -73,18 +75,20 @@ function AUT_gpt() {
   useEffect(() => {
     random_temp(); // Initialize temperature
 
-    if (task === 5) {
+    if (task === 3) {
+      // For task 3, after round 3, go to Task3PostSurvey
+    } else if (task === 4) {
+      // For task 4, after round 3, go to Task4PostSurvey
+    } else if (task === 5) {
       navigate("/PostSurvey");
     }
   }, [task]); // Empty array ensures this only runs once on mount
 
   useEffect(() => {
     // console.log("TEMP ARRAY: ", tempsArray);
-    if (round === 4) {
+    if (round === 3) {
       console.log(`Task ${task} completed!`);
-      setTask((prevTask) => prevTask + 1);
-      setRound(1);
-      setResetToggle(true);
+      navigate("/TaskPostSurvey", { state: { task: task } });
     }
   }, [round]); // Ensure all dependencies are correctly listed
 

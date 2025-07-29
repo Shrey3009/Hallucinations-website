@@ -5,17 +5,14 @@ import { useSurvey } from "../../surveyIDContext";
 
 function SurveyForm() {
   const [formData, setFormData] = useState({
-    name: "",
     age: "",
-    email: "",
     gender: "",
-    major: "",
     race: "",
     experience: "",
-    activities: "",
-    creativity: "",
-    familiarity: "",
-    agreeToTerms: false,
+    designExperience: "",
+    healthcareFamiliarity: "",
+    automationFamiliarity: "",
+    smartDevicesFamiliarity: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -97,21 +94,6 @@ function SurveyForm() {
     <form onSubmit={handleSubmit} className={styles.container}>
       <div className={styles.formGroup}>
         <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleChange}
-          className={`${styles.field} ${errors.name ? styles.error : ""}`}
-          required
-        />
-        {errors.name && (
-          <span className={styles.errorMessage}>{errors.name}</span>
-        )}
-      </div>
-
-      <div className={styles.formGroup}>
-        <input
           type="number"
           name="age"
           placeholder="Age"
@@ -122,21 +104,6 @@ function SurveyForm() {
         />
         {errors.age && (
           <span className={styles.errorMessage}>{errors.age}</span>
-        )}
-      </div>
-
-      <div className={styles.formGroup}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          className={`${styles.field} ${errors.email ? styles.error : ""}`}
-          required
-        />
-        {errors.email && (
-          <span className={styles.errorMessage}>{errors.email}</span>
         )}
       </div>
 
@@ -155,20 +122,6 @@ function SurveyForm() {
         </select>
         {errors.gender && (
           <span className={styles.errorMessage}>{errors.gender}</span>
-        )}
-      </div>
-
-      <div className={styles.formGroup}>
-        <input
-          name="major"
-          placeholder="Major"
-          value={formData.major}
-          onChange={handleChange}
-          className={`${styles.field} ${errors.major ? styles.error : ""}`}
-          required
-        />
-        {errors.major && (
-          <span className={styles.errorMessage}>{errors.major}</span>
         )}
       </div>
 
@@ -216,7 +169,7 @@ function SurveyForm() {
         </div>
       )}
 
-      <p>Prior Experience with AI (e.g., ChatGPT, Midjourney, DALL-E):</p>
+      <p>Prior Experience with AI (e.g., ChatGPT):</p>
       <div className={styles.formGroup}>
         <select
           name="experience"
@@ -237,106 +190,123 @@ function SurveyForm() {
       </div>
 
       <p>
-        How often do you engage in creative activities (e.g., writing, music,
-        art, design)?
+        Do you have any previous experience with product design, innovation, or
+        creative problem-solving?
       </p>
       <div className={styles.formGroup}>
         <select
-          name="activities"
-          value={formData.activities}
-          onChange={handleChange}
-          className={`${styles.field} ${errors.activities ? styles.error : ""}`}
-          required
-        >
-          <option value="">Select an option</option>
-          <option value="Never">Never</option>
-          <option value="Rarely">Rarely</option>
-          <option value="Sometimes">Sometimes</option>
-          <option value="Often">Often</option>
-        </select>
-        {errors.activities && (
-          <span className={styles.errorMessage}>{errors.activities}</span>
-        )}
-      </div>
-
-      <p>On a scale from 1-5, how creative do you consider yourself?</p>
-      <div className={styles.formGroup}>
-        <select
-          name="creativity"
-          value={formData.creativity}
-          onChange={handleChange}
-          className={`${styles.field} ${errors.creativity ? styles.error : ""}`}
-          required
-        >
-          <option value="">Select an option</option>
-          <option value="1">
-            1 = Not creative (Rarely generate new ideas)
-          </option>
-          <option value="2">
-            2 = Slightly creative (Occasionally think outside the box)
-          </option>
-          <option value="3">
-            3 = Moderately creative (Sometimes generate original ideas)
-          </option>
-          <option value="4">
-            4 = Very creative (Frequently come up with unique ideas)
-          </option>
-          <option value="5">
-            5 = Extremely creative (Creativity is central to how I think)
-          </option>
-        </select>
-        {errors.creativity && (
-          <span className={styles.errorMessage}>{errors.creativity}</span>
-        )}
-      </div>
-
-      <p>
-        On a scale from 1 to 5, rate your familiarity with the concept of
-        alternative uses tasks.
-      </p>
-      <div className={styles.formGroup}>
-        <select
-          name="familiarity"
-          value={formData.familiarity}
+          name="designExperience"
+          value={formData.designExperience}
           onChange={handleChange}
           className={`${styles.field} ${
-            errors.familiarity ? styles.error : ""
+            errors.designExperience ? styles.error : ""
           }`}
           required
         >
           <option value="">Select an option</option>
-          <option value="1">1 = Never heard of it</option>
-          <option value="2">
-            2 = Slightly familiar (Know the term but no experience)
+          <option value="None">
+            None – I have never done this type of activity
           </option>
-          <option value="3">
-            3 = Moderately familiar (Some understanding, little experience)
+          <option value="Some">
+            Some – I have done this a few times in school, work, or personal
+            life
           </option>
-          <option value="4">
-            4 = Very familiar (Know how it works, have done it before)
-          </option>
-          <option value="5">
-            5 = Expert (Fully understand and have experience)
+          <option value="Extensive">
+            Extensive – I frequently engage in this kind of activity or have
+            formal training/experience
           </option>
         </select>
-        {errors.familiarity && (
-          <span className={styles.errorMessage}>{errors.familiarity}</span>
+        {errors.designExperience && (
+          <span className={styles.errorMessage}>{errors.designExperience}</span>
         )}
       </div>
 
+      <p>
+        How familiar are you with each of the following domains? (1 = Not at all
+        familiar, 5 = Very familiar)
+      </p>
+
+      <p>
+        Healthcare technologies (e.g., smart hydration containers, wearable
+        emotion detection devices, remote health monitors):
+      </p>
       <div className={styles.formGroup}>
-        <label className={styles.checkboxContainer}>
-          <input
-            type="checkbox"
-            name="agreeToTerms"
-            checked={formData.agreeToTerms}
-            onChange={handleChange}
-            required
-          />
-          I agree to the terms and conditions
-        </label>
-        {errors.agreeToTerms && (
-          <span className={styles.errorMessage}>{errors.agreeToTerms}</span>
+        <select
+          name="healthcareFamiliarity"
+          value={formData.healthcareFamiliarity}
+          onChange={handleChange}
+          className={`${styles.field} ${
+            errors.healthcareFamiliarity ? styles.error : ""
+          }`}
+          required
+        >
+          <option value="">Select an option</option>
+          <option value="1">1 = Not at all familiar</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5 = Very familiar</option>
+        </select>
+        {errors.healthcareFamiliarity && (
+          <span className={styles.errorMessage}>
+            {errors.healthcareFamiliarity}
+          </span>
+        )}
+      </div>
+
+      <p>
+        Automation (e.g., self-following luggage, automated shelf
+        monitoring/restocking systems):
+      </p>
+      <div className={styles.formGroup}>
+        <select
+          name="automationFamiliarity"
+          value={formData.automationFamiliarity}
+          onChange={handleChange}
+          className={`${styles.field} ${
+            errors.automationFamiliarity ? styles.error : ""
+          }`}
+          required
+        >
+          <option value="">Select an option</option>
+          <option value="1">1 = Not at all familiar</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5 = Very familiar</option>
+        </select>
+        {errors.automationFamiliarity && (
+          <span className={styles.errorMessage}>
+            {errors.automationFamiliarity}
+          </span>
+        )}
+      </div>
+
+      <p>
+        Smart devices (e.g., temperature-controlled beverage containers,
+        AI-powered drink dispensers, smart foodware with interactive lights):
+      </p>
+      <div className={styles.formGroup}>
+        <select
+          name="smartDevicesFamiliarity"
+          value={formData.smartDevicesFamiliarity}
+          onChange={handleChange}
+          className={`${styles.field} ${
+            errors.smartDevicesFamiliarity ? styles.error : ""
+          }`}
+          required
+        >
+          <option value="">Select an option</option>
+          <option value="1">1 = Not at all familiar</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5 = Very familiar</option>
+        </select>
+        {errors.smartDevicesFamiliarity && (
+          <span className={styles.errorMessage}>
+            {errors.smartDevicesFamiliarity}
+          </span>
         )}
       </div>
 
