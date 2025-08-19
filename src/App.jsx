@@ -16,6 +16,8 @@ import Task3PostSurvey from "./Components/Task3PostSurvey/Task3PostSurvey";
 import Task4PostSurvey from "./Components/Task4PostSurvey/Task4PostSurvey";
 // import AUT3 from "./Components/AUT3/AUT3";
 import TaskPostSurvey from "./Components/TaskPostSurvey/TaskPostSurvey";
+import AttentionTest2 from "./Components/AttentionTest/AttentionTest2";
+import AttentionTest3 from "./Components/AttentionTest/AttentionTest3";
 
 function App() {
   return (
@@ -37,6 +39,8 @@ function App() {
         <Route path="/Task4PostSurvey" element={<Task4PostSurvey />} />
         {/* <Route path="/AUT3" element={<AUT3 />} /> */}
         <Route path="/TaskPostSurvey" element={<TaskPostSurvey />} />
+        <Route path="/AttentionTest2" element={<AttentionTest2 />} />
+        <Route path="/AttentionTest3" element={<AttentionTest3 />} />
       </Routes>
     </Router>
   );

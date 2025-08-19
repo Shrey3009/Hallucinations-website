@@ -14,7 +14,7 @@ function AUT() {
   const preSurveyId = surveyId;
   const { data, setData } = useData();
   const [randomString, setRandomString] = useState("");
-  const [timeLeft, setTimeLeft] = useState(180); // 180 seconds = 3 minutes
+  const [timeLeft, setTimeLeft] = useState(300); // 300 seconds = 5 minutes
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -22,7 +22,10 @@ function AUT() {
   }, []);
 
   useEffect(() => {
-    if (data.length > 0) {
+    if (preSurveyId) {
+      fetchPatentForTask();
+    } else if (data.length > 0) {
+      // Fallback to existing logic if no preSurveyId
       const randomIndex = Math.floor(Math.random() * data.length);
       setRandomString(data[randomIndex]);
       const newData = [
@@ -31,13 +34,80 @@ function AUT() {
       ];
       setData(newData);
     }
-  }, []);
+  }, [preSurveyId]);
+
+  const fetchPatentForTask = async () => {
+    try {
+      const apiUrl = `${
+        import.meta.env.VITE_NODE_API
+      }/api/patent-for-task/${preSurveyId}/1`;
+      console.log(`Attempting to fetch patent from: ${apiUrl}`);
+
+      const response = await fetch(apiUrl);
+
+      if (response.ok) {
+        const patentData = await response.json();
+        setRandomString(patentData.patent);
+        console.log("Patent fetched for Task 1:", patentData.patent);
+      } else {
+        console.log(
+          `API not available (Status: ${response.status}), using fallback`
+        );
+        // Fallback to existing data context if API fails
+        if (data.length > 0) {
+          const randomIndex = Math.floor(Math.random() * data.length);
+          const selectedItem = data[randomIndex];
+
+          // Convert string item to patent object
+          const patent =
+            typeof selectedItem === "string"
+              ? createFallbackPatent(selectedItem)
+              : selectedItem;
+
+          setRandomString(patent);
+          const newData = [
+            ...data.slice(0, randomIndex),
+            ...data.slice(randomIndex + 1),
+          ];
+          setData(newData);
+        }
+      }
+    } catch (error) {
+      console.log("API not available, using fallback:", error.message);
+      // Fallback to existing data context if API fails
+      if (data.length > 0) {
+        const randomIndex = Math.floor(Math.random() * data.length);
+        const selectedItem = data[randomIndex];
+
+        // Convert string item to patent object
+        const patent =
+          typeof selectedItem === "string"
+            ? createFallbackPatent(selectedItem)
+            : selectedItem;
+
+        setRandomString(patent);
+        const newData = [
+          ...data.slice(0, randomIndex),
+          ...data.slice(randomIndex + 1),
+        ];
+        setData(newData);
+      }
+    }
+  };
+
+  const createFallbackPatent = (itemName) => {
+    return {
+      name: `${itemName} Technology Patent`,
+      description: `A patented technology related to ${itemName} that enables innovative applications in various domains. This technology offers unique capabilities and can be adapted for creative uses across different industries and scenarios.`,
+      category: "General",
+    };
+  };
 
   useEffect(() => {
     // If timeLeft is 0, submit the form/data
     if (timeLeft === 0) {
       handleSubmit();
-      setTimeLeft(180);
+      setTimeLeft(300);
     }
 
     // Set interval to countdown the timer

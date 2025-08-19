@@ -83,6 +83,34 @@ function SurveyForm() {
 
       console.log("Form submitted successfully:", responseData);
       setSurveyId(responseData._id);
+      
+      // Assign patents to the user after successful PreSurvey submission
+      try {
+        const patentApiUrl = `${import.meta.env.VITE_NODE_API}/api/patent-assignment`;
+        console.log(`Attempting to assign patents via: ${patentApiUrl}`);
+        
+        const patentResponse = await fetch(patentApiUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            preSurveyId: responseData._id,
+          }),
+        });
+
+        if (!patentResponse.ok) {
+          const errorText = await patentResponse.text();
+          console.log(`Patent assignment API not available (Status: ${patentResponse.status}). Using fallback logic.`);
+        } else {
+          const patentData = await patentResponse.json();
+          console.log("Patents assigned successfully:", patentData);
+        }
+      } catch (patentError) {
+        console.log("Patent assignment API not available, using fallback logic:", patentError.message);
+        // Continue to welcome page even if patent assignment fails
+      }
+
       navigate("/WelcomePage");
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -255,8 +283,9 @@ function SurveyForm() {
       </div>
 
       <p>
-        Automation (e.g., self-following luggage, automated shelf
-        monitoring/restocking systems):
+        Personal service robots (e.g., companion robots for home interaction,
+        autonomous service robots with health monitoring, medical assistance
+        delivery robots):
       </p>
       <div className={styles.formGroup}>
         <select

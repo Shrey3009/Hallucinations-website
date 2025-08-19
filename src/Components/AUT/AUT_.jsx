@@ -10,6 +10,89 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
   const { surveyId } = useSurvey();
   const preSurveyId = surveyId;
   const [timeLeft, setTimeLeft] = useState(180); // 180 seconds = 3 minutes
+  const [currentPatent, setCurrentPatent] = useState(randomString || null);
+
+  // Fetch patent for the current task
+  useEffect(() => {
+    if (preSurveyId && task) {
+      if (!currentPatent) {
+        fetchPatentForTask();
+      }
+    } else if (randomString && !currentPatent) {
+      // If no API data but randomString is provided, use it
+      console.log("Using provided randomString as patent:", randomString);
+      setCurrentPatent(randomString);
+    }
+  }, [preSurveyId, task, randomString]);
+
+  // Ensure we always have a patent, even if API fails and randomString is null
+  useEffect(() => {
+    if (!currentPatent && randomString) {
+      console.log("Setting fallback patent from randomString:", randomString);
+      setCurrentPatent(randomString);
+    }
+  }, [currentPatent, randomString]);
+
+  const fetchPatentForTask = async () => {
+    try {
+      const apiUrl = `${
+        import.meta.env.VITE_NODE_API
+      }/api/patent-for-task/${preSurveyId}/${task}`;
+      console.log(`Attempting to fetch patent from: ${apiUrl}`);
+
+      const response = await fetch(apiUrl);
+
+      if (response.ok) {
+        const patentData = await response.json();
+        setCurrentPatent(patentData.patent);
+        console.log(`Patent fetched for Task ${task}:`, patentData.patent);
+      } else {
+        console.log(
+          `API not available (Status: ${response.status}), using fallback patent`
+        );
+        // Use the passed randomString as fallback
+        if (randomString) {
+          // Check if randomString is already a patent object or just a string
+          const patent =
+            typeof randomString === "string"
+              ? createFallbackPatent(randomString)
+              : randomString;
+          setCurrentPatent(patent);
+          console.log("Using randomString as fallback:", patent);
+        } else {
+          // Create a generic fallback patent
+          const genericPatent = createFallbackPatent("Generic Technology");
+          setCurrentPatent(genericPatent);
+          console.log("Using generic fallback patent:", genericPatent);
+        }
+      }
+    } catch (error) {
+      console.log("API not available, using fallback patent:", error.message);
+      // Use the passed randomString as fallback
+      if (randomString) {
+        // Check if randomString is already a patent object or just a string
+        const patent =
+          typeof randomString === "string"
+            ? createFallbackPatent(randomString)
+            : randomString;
+        setCurrentPatent(patent);
+        console.log("Using randomString as fallback:", patent);
+      } else {
+        // Create a generic fallback patent
+        const genericPatent = createFallbackPatent("Generic Technology");
+        setCurrentPatent(genericPatent);
+        console.log("Using generic fallback patent:", genericPatent);
+      }
+    }
+  };
+
+  const createFallbackPatent = (itemName) => {
+    return {
+      name: `${itemName} Technology Patent`,
+      description: `A patented technology related to ${itemName} that enables innovative applications in various domains. This technology offers unique capabilities and can be adapted for creative uses across different industries and scenarios.`,
+      category: "General",
+    };
+  };
 
   // Reset timer when round changes
   useEffect(() => {
@@ -64,7 +147,7 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
           useCases,
           preSurveyId,
           round,
-          patent: randomString,
+          patent: currentPatent,
           temperature,
           task,
         }),
@@ -72,7 +155,8 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
 
       if (response.ok) {
         const body = await response.json();
-        console.log(body);
+        console.log("Task submission successful:", body);
+        console.log("Patent data sent:", currentPatent);
         setUseCases(() =>
           Array.from({ length: 3 }, () => ({ use: "", explanation: "" }))
         );
@@ -95,12 +179,12 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
         </h1>
         <div className={styles.patentSection}>
           <h2 className={styles.patentName}>
-            Patent Name: {randomString?.name || "Loading..."}
+            Patent Name: {currentPatent?.name || "Loading..."}
           </h2>
           <div className={styles.patentDescription}>
             <h3>Patent Description:</h3>
             <p>
-              {randomString?.description || "Loading patent description..."}
+              {currentPatent?.description || "Loading patent description..."}
             </p>
           </div>
         </div>

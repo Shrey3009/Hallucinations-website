@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import AUT_ from "./AUT_";
 import styles from "./organize.module.css"; // Importing the CSS module
 import { useData } from "../../dataContext";
+import { useSurvey } from "../../surveyIDContext";
 
 function AUT_gpt() {
   const [round, setRound] = useState(1); // Manage round as state
@@ -16,6 +17,7 @@ function AUT_gpt() {
   const [randomIndex, setRandomIndex] = useState();
   const navigate = useNavigate();
   const location = useLocation();
+  const { surveyId } = useSurvey();
 
   const { data, setData } = useData();
   const [objectArray, setObjectArray] = useState(data); // State to store the entire dataset
@@ -41,21 +43,71 @@ function AUT_gpt() {
       task,
       objectArray
     );
-    if (objectArray) {
-      if (objectArray.length > 0) {
-        console.log("DATA inside IF: ");
-        const randomIndex = Math.floor(Math.random() * objectArray.length);
-        setRandomString(objectArray[randomIndex]);
-
-        const newData = [
-          ...data.slice(0, randomIndex),
-          ...data.slice(randomIndex + 1),
-        ];
-
-        setObjectArray(newData);
-      }
+    // Fetch patent for the current task when task changes
+    if (task) {
+      fetchPatentForTask();
     }
-  }, [task]); // Dependency on 'data'
+  }, [task]); // Dependency on 'task'
+
+  const fetchPatentForTask = async () => {
+    try {
+      if (!surveyId) {
+        console.error("No survey ID available for patent fetching");
+        // Fallback to existing logic
+        fallbackToExistingLogic();
+        return;
+      }
+
+      const apiUrl = `${import.meta.env.VITE_NODE_API}/api/patent-for-task/${surveyId}/${task}`;
+      console.log(`Fetching patent from: ${apiUrl}`);
+
+      const response = await fetch(apiUrl);
+      
+      if (response.ok) {
+        const patentData = await response.json();
+        setRandomString(patentData.patent);
+        console.log(`Patent fetched for Task ${task}:`, patentData.patent);
+      } else {
+        console.log(`API not available (Status: ${response.status}), using fallback logic`);
+        fallbackToExistingLogic();
+      }
+    } catch (error) {
+      console.log("API not available, using fallback logic:", error.message);
+      fallbackToExistingLogic();
+    }
+  };
+
+  const fallbackToExistingLogic = () => {
+    if (objectArray && objectArray.length > 0) {
+      console.log("Using fallback patent selection logic from objectArray");
+      const randomIndex = Math.floor(Math.random() * objectArray.length);
+      const selectedItem = objectArray[randomIndex];
+      
+      // Convert string item to patent object
+      const patent = typeof selectedItem === 'string' ? 
+        createFallbackPatent(selectedItem) : selectedItem;
+      
+      setRandomString(patent);
+      console.log("Selected fallback patent:", patent);
+
+      const newData = [
+        ...data.slice(0, randomIndex),
+        ...data.slice(randomIndex + 1),
+      ];
+
+      setObjectArray(newData);
+    } else {
+      console.log("No objectArray data available for fallback");
+    }
+  };
+
+  const createFallbackPatent = (itemName) => {
+    return {
+      name: `${itemName} Technology Patent`,
+      description: `A patented technology related to ${itemName} that enables innovative applications in various domains. This technology offers unique capabilities and can be adapted for creative uses across different industries and scenarios.`,
+      category: 'General'
+    };
+  };
 
   const random_temp = () => {
     setRandomIndex(Math.floor(Math.random() * tempsArray.length));

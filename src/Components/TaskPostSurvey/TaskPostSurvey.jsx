@@ -77,9 +77,9 @@ function TaskPostSurvey() {
 
       // Navigate based on current task
       if (currentTask === 2) {
-        navigate("/AUT_gpt", { state: { task: 3 } }); // Go to Task 3 (AI-supported)
+        navigate("/AttentionTest2"); // Go to attention test after Task 2
       } else if (currentTask === 3) {
-        navigate("/AUT_gpt", { state: { task: 4 } }); // Go to Task 4 (AI-supported)
+        navigate("/AttentionTest3"); // Go to attention test after Task 3
       } else if (currentTask === 4) {
         navigate("/PostSurvey"); // Go to main post-survey
       }
