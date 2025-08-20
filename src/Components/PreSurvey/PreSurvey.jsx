@@ -83,12 +83,14 @@ function SurveyForm() {
 
       console.log("Form submitted successfully:", responseData);
       setSurveyId(responseData._id);
-      
+
       // Assign patents to the user after successful PreSurvey submission
       try {
-        const patentApiUrl = `${import.meta.env.VITE_NODE_API}/api/patent-assignment`;
+        const patentApiUrl = `${
+          import.meta.env.VITE_NODE_API
+        }/api/patent-assignment`;
         console.log(`Attempting to assign patents via: ${patentApiUrl}`);
-        
+
         const patentResponse = await fetch(patentApiUrl, {
           method: "POST",
           headers: {
@@ -101,13 +103,18 @@ function SurveyForm() {
 
         if (!patentResponse.ok) {
           const errorText = await patentResponse.text();
-          console.log(`Patent assignment API not available (Status: ${patentResponse.status}). Using fallback logic.`);
+          console.log(
+            `Patent assignment API not available (Status: ${patentResponse.status}). Using fallback logic.`
+          );
         } else {
           const patentData = await patentResponse.json();
           console.log("Patents assigned successfully:", patentData);
         }
       } catch (patentError) {
-        console.log("Patent assignment API not available, using fallback logic:", patentError.message);
+        console.log(
+          "Patent assignment API not available, using fallback logic:",
+          patentError.message
+        );
         // Continue to welcome page even if patent assignment fails
       }
 

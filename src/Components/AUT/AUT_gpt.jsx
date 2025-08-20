@@ -53,60 +53,26 @@ function AUT_gpt() {
     try {
       if (!surveyId) {
         console.error("No survey ID available for patent fetching");
-        // Fallback to existing logic
-        fallbackToExistingLogic();
         return;
       }
 
-      const apiUrl = `${import.meta.env.VITE_NODE_API}/api/patent-for-task/${surveyId}/${task}`;
+      const apiUrl = `${
+        import.meta.env.VITE_NODE_API
+      }/api/patent-for-task/${surveyId}/${task}`;
       console.log(`Fetching patent from: ${apiUrl}`);
 
       const response = await fetch(apiUrl);
-      
+
       if (response.ok) {
         const patentData = await response.json();
         setRandomString(patentData.patent);
         console.log(`Patent fetched for Task ${task}:`, patentData.patent);
       } else {
-        console.log(`API not available (Status: ${response.status}), using fallback logic`);
-        fallbackToExistingLogic();
+        console.error(`API failed with status: ${response.status}`);
       }
     } catch (error) {
-      console.log("API not available, using fallback logic:", error.message);
-      fallbackToExistingLogic();
+      console.error("Failed to fetch patent:", error.message);
     }
-  };
-
-  const fallbackToExistingLogic = () => {
-    if (objectArray && objectArray.length > 0) {
-      console.log("Using fallback patent selection logic from objectArray");
-      const randomIndex = Math.floor(Math.random() * objectArray.length);
-      const selectedItem = objectArray[randomIndex];
-      
-      // Convert string item to patent object
-      const patent = typeof selectedItem === 'string' ? 
-        createFallbackPatent(selectedItem) : selectedItem;
-      
-      setRandomString(patent);
-      console.log("Selected fallback patent:", patent);
-
-      const newData = [
-        ...data.slice(0, randomIndex),
-        ...data.slice(randomIndex + 1),
-      ];
-
-      setObjectArray(newData);
-    } else {
-      console.log("No objectArray data available for fallback");
-    }
-  };
-
-  const createFallbackPatent = (itemName) => {
-    return {
-      name: `${itemName} Technology Patent`,
-      description: `A patented technology related to ${itemName} that enables innovative applications in various domains. This technology offers unique capabilities and can be adapted for creative uses across different industries and scenarios.`,
-      category: 'General'
-    };
   };
 
   const random_temp = () => {

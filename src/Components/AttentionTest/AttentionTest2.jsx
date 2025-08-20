@@ -30,14 +30,14 @@ function AttentionTest2() {
         <h1 className={styles.title}>
           You've completed the task and provided some great creative ideas!
         </h1>
-        
+
         <p className={styles.instruction}>
           To continue, please select option 2 below to continue.
         </p>
 
         <div className={styles.optionsContainer}>
           <h2 className={styles.optionsTitle}>Choose one option:</h2>
-          
+
           <div className={styles.optionGroup}>
             <label className={styles.optionLabel}>
               <input
@@ -92,7 +92,7 @@ function AttentionTest2() {
         )}
 
         <div className={styles.buttonContainer}>
-          <button 
+          <button
             onClick={handleContinue}
             className={styles.continueButton}
             disabled={!selectedOption}

@@ -24,15 +24,6 @@ function AUT() {
   useEffect(() => {
     if (preSurveyId) {
       fetchPatentForTask();
-    } else if (data.length > 0) {
-      // Fallback to existing logic if no preSurveyId
-      const randomIndex = Math.floor(Math.random() * data.length);
-      setRandomString(data[randomIndex]);
-      const newData = [
-        ...data.slice(0, randomIndex),
-        ...data.slice(randomIndex + 1),
-      ];
-      setData(newData);
     }
   }, [preSurveyId]);
 
@@ -47,60 +38,15 @@ function AUT() {
 
       if (response.ok) {
         const patentData = await response.json();
-        setRandomString(patentData.patent);
-        console.log("Patent fetched for Task 1:", patentData.patent);
+        setRandomString(patentData.data);
+        console.log("Patent fetched for Task 1:", patentData.data.patentName);
+        console.log("Patent fetched for Task 1:", patentData.data.patentName);
       } else {
-        console.log(
-          `API not available (Status: ${response.status}), using fallback`
-        );
-        // Fallback to existing data context if API fails
-        if (data.length > 0) {
-          const randomIndex = Math.floor(Math.random() * data.length);
-          const selectedItem = data[randomIndex];
-
-          // Convert string item to patent object
-          const patent =
-            typeof selectedItem === "string"
-              ? createFallbackPatent(selectedItem)
-              : selectedItem;
-
-          setRandomString(patent);
-          const newData = [
-            ...data.slice(0, randomIndex),
-            ...data.slice(randomIndex + 1),
-          ];
-          setData(newData);
-        }
+        console.error(`API failed with status: ${response.status}`);
       }
     } catch (error) {
-      console.log("API not available, using fallback:", error.message);
-      // Fallback to existing data context if API fails
-      if (data.length > 0) {
-        const randomIndex = Math.floor(Math.random() * data.length);
-        const selectedItem = data[randomIndex];
-
-        // Convert string item to patent object
-        const patent =
-          typeof selectedItem === "string"
-            ? createFallbackPatent(selectedItem)
-            : selectedItem;
-
-        setRandomString(patent);
-        const newData = [
-          ...data.slice(0, randomIndex),
-          ...data.slice(randomIndex + 1),
-        ];
-        setData(newData);
-      }
+      console.error("Failed to fetch patent:", error.message);
     }
-  };
-
-  const createFallbackPatent = (itemName) => {
-    return {
-      name: `${itemName} Technology Patent`,
-      description: `A patented technology related to ${itemName} that enables innovative applications in various domains. This technology offers unique capabilities and can be adapted for creative uses across different industries and scenarios.`,
-      category: "General",
-    };
   };
 
   useEffect(() => {
@@ -198,13 +144,11 @@ function AUT() {
         </h1>
         <div className={styles.patentSection}>
           <h2 className={styles.patentName}>
-            Patent Name: {randomString?.name || "Loading..."}
+            Patent Name: {randomString?.patentName || "Loading..."}
           </h2>
           <div className={styles.patentDescription}>
             <h3>Patent Description:</h3>
-            <p>
-              {randomString?.description || "Loading patent description..."}
-            </p>
+            <p>{randomString?.abstract || "Loading patent description..."}</p>
           </div>
         </div>
         <p className={styles.taskDescription}>
