@@ -1,53 +1,43 @@
 import React, { useState, useEffect } from "react";
-import Chatbot from "./chat_bot";
-import Chatbot_new from "./chatbot";
+import Chatbot from "./chatbot"; // fixed import
 import Instructions from "../Instructions/Instructions";
 import { useNavigate, useLocation } from "react-router-dom";
 import AUT_ from "./AUT_";
-import styles from "./organize.module.css"; // Importing the CSS module
+import styles from "./organize.module.css";
 import { useData } from "../../dataContext";
 import { useSurvey } from "../../surveyIDContext";
 
 function AUT_gpt() {
-  const [round, setRound] = useState(1); // Manage round as state
+  const [round, setRound] = useState(1);
   const [task, setTask] = useState(2);
-  const [tempsArray, setTemps_Array] = useState([0.0, 1.0, 2.0]);
   const [temperature, setTemperature] = useState();
   const [resetToggle, setResetToggle] = useState(false);
-  const [randomIndex, setRandomIndex] = useState();
   const navigate = useNavigate();
   const location = useLocation();
   const { surveyId } = useSurvey();
 
-  const { data, setData } = useData();
-  const [objectArray, setObjectArray] = useState(data); // State to store the entire dataset
+  const { data } = useData();
+  const [objectArray] = useState(data);
   const [randomString, setRandomString] = useState("");
+  const [level, setLevel] = useState(null);
 
-  // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
-    // Set task from location state if provided
     if (location.state?.task) {
       setTask(location.state.task);
     }
   }, []);
 
-  // Scroll to top when round changes
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [round]);
 
   useEffect(() => {
-    console.log(
-      "DATA in AUT_gpt when task is and preSurveyID: ",
-      task,
-      objectArray
-    );
-    // Fetch patent for the current task when task changes
+    console.log("DATA in AUT_gpt when task is and preSurveyID: ", task, objectArray);
     if (task) {
       fetchPatentForTask();
     }
-  }, [task]); // Dependency on 'task'
+  }, [task]);
 
   const fetchPatentForTask = async () => {
     try {
@@ -56,17 +46,30 @@ function AUT_gpt() {
         return;
       }
 
-      const apiUrl = `${
-        import.meta.env.VITE_NODE_API
-      }/api/patent-for-task/${surveyId}/${task}`;
+      const apiUrl = `${import.meta.env.VITE_NODE_API}/api/patent-for-task/${surveyId}/${task}`;
       console.log(`Fetching patent from: ${apiUrl}`);
 
       const response = await fetch(apiUrl);
-
       if (response.ok) {
         const patentData = await response.json();
-        setRandomString(patentData.patent);
-        console.log(`Patent fetched for Task ${task}:`, patentData.patent);
+        setRandomString(patentData.data);
+
+        console.log(`Patent fetched for Task ${task}:`, patentData.data);
+
+        if (task >= 2 && task <= 4) {
+          const levelFromBackend = patentData.level;
+          setLevel(levelFromBackend);
+
+          const tempMap = { low: 0, medium: 1, high: 2 };
+          setTemperature(tempMap[levelFromBackend]);
+
+          console.log(
+            `Hallucination level for Task ${task}: ${levelFromBackend} → temperature ${tempMap[levelFromBackend]}`
+          );
+        } else {
+          setLevel(null);
+          setTemperature(undefined);
+        }
       } else {
         console.error(`API failed with status: ${response.status}`);
       }
@@ -75,70 +78,40 @@ function AUT_gpt() {
     }
   };
 
-  const random_temp = () => {
-    setRandomIndex(Math.floor(Math.random() * tempsArray.length));
-  };
-
   useEffect(() => {
-    const selectedNumber = tempsArray[randomIndex];
-    setTemperature(selectedNumber);
-  }, [randomIndex]);
-
-  useEffect(() => {
-    setTemps_Array((prev) => prev.filter((_, index) => index !== randomIndex));
-    console.log("RANDOMISED TEMPERATURE: ", temperature);
-    console.log("TEMP ARRAY: ", tempsArray);
-  }, [temperature]);
-
-  useEffect(() => {
-    random_temp(); // Initialize temperature
-
-    if (task === 3) {
-      // For task 3, after round 3, go to Task3PostSurvey
-    } else if (task === 4) {
-      // For task 4, after round 3, go to Task4PostSurvey
-    } else if (task === 5) {
-      navigate("/PostSurvey");
-    }
-  }, [task]); // Empty array ensures this only runs once on mount
-
-  useEffect(() => {
-    // console.log("TEMP ARRAY: ", tempsArray);
-    if (round === 3) {
+    if (round === 3 && task > 1) {
       console.log(`Task ${task} completed!`);
       navigate("/TaskPostSurvey", { state: { task: task } });
     }
-  }, [round]); // Ensure all dependencies are correctly listed
+    if (task === 1) {
+      console.log("Task 1 active – no GPT rounds");
+    }
+  }, [round, task, navigate]);
 
   return (
-    <>
-      <div className={styles.main}>
-        <Instructions
-          className={styles.instructions}
-          round={round}
-          task={task}
-        />
-        <div className={styles.bottom_container}>
-          <div className={styles.aut_component}>
-            <AUT_
-              round={round}
-              onStateChange={setRound}
-              task={task}
-              randomString={randomString}
-              temperature={temperature}
-            />
-          </div>
-          <div className={styles.chat}>
-            <Chatbot_new
-              task={task}
-              resetToggle={resetToggle}
-              onReset={() => setResetToggle(false)}
-              temperature={temperature}
-            />
-          </div>
+    <div className={styles.main}>
+      <Instructions className={styles.instructions} round={round} task={task} />
+      <div className={styles.bottom_container}>
+        <div className={styles.aut_component}>
+          <AUT_
+            round={round}
+            onStateChange={setRound}
+            task={task}
+            randomString={randomString}
+            temperature={temperature}
+          />
+        </div>
+        <div className={styles.chat}>
+          <Chatbot
+            task={task}
+            round={task === 1 ? null : round}
+            resetToggle={resetToggle}
+            onReset={() => setResetToggle(false)}
+            level={level}
+          />
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

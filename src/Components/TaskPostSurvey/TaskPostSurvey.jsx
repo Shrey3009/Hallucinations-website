@@ -29,7 +29,6 @@ function TaskPostSurvey() {
       ...prevState,
       [name]: value,
     }));
-    // Clear error when user makes a selection
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
     }
@@ -40,24 +39,38 @@ function TaskPostSurvey() {
     console.log(`Submitting Task ${currentTask} post-survey data:`, formData);
 
     try {
+      let payload = {
+        preSurveyId: surveyId,
+        taskNumber: currentTask,
+      };
+
+      // ✅ For AI tasks (2, 3, 4)
+      if ([2, 3, 4].includes(currentTask)) {
+        payload.accuracy = formData.accuracy;
+        payload.helpfulness = formData.helpfulness;
+      }
+
+      // ✅ For baseline task (1)
+      if (currentTask === 1) {
+        payload.confidence = formData.confidence;
+        payload.difficulty = formData.difficulty;
+      }
+
+      console.log("Payload being sent:", payload);
+
       const response = await fetch(
         import.meta.env.VITE_NODE_API + "/TaskPostSurvey",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...formData,
-            preSurveyId: surveyId,
-            taskNumber: currentTask,
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
         }
       );
 
       const responseData = await response.json();
 
       if (!response.ok) {
+        console.error("Backend error response:", responseData);
         if (responseData.errors) {
           const newErrors = {};
           responseData.errors.forEach((error) => {
@@ -77,11 +90,11 @@ function TaskPostSurvey() {
 
       // Navigate based on current task
       if (currentTask === 2) {
-        navigate("/AttentionTest2"); // Go to attention test after Task 2
+        navigate("/AttentionTest2");
       } else if (currentTask === 3) {
-        navigate("/AttentionTest3"); // Go to attention test after Task 3
+        navigate("/AttentionTest3");
       } else if (currentTask === 4) {
-        navigate("/PostSurvey"); // Go to main post-survey
+        navigate("/PostSurvey");
       }
     } catch (error) {
       console.error(`Error submitting Task ${currentTask} post-survey:`, error);
@@ -89,8 +102,8 @@ function TaskPostSurvey() {
     }
   };
 
-  const isAITask = currentTask === 2 || currentTask === 4;
-  const isBaselineTask = currentTask === 3;
+  const isAITask = [2, 3, 4].includes(currentTask);
+  const isBaselineTask = currentTask === 1;
 
   return (
     <div className={styles.container}>
@@ -104,6 +117,7 @@ function TaskPostSurvey() {
       <form onSubmit={handleSubmit} className={styles.form}>
         {isAITask && (
           <>
+            {/* Accuracy Question */}
             <div className={styles.questionGroup}>
               <h2 className={styles.questionTitle}>
                 How accurate or reasonable did you find the AI's suggestions?
@@ -112,157 +126,93 @@ function TaskPostSurvey() {
                 Choose the option that best reflects your impression.
               </p>
               <div className={styles.radioGroup}>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="accuracy"
-                    value="mostly-incorrect"
-                    checked={formData.accuracy === "mostly-incorrect"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    The suggestions were mostly incorrect or irrelevant
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="accuracy"
-                    value="some-made-sense"
-                    checked={formData.accuracy === "some-made-sense"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Some suggestions made sense, but others seemed off
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="accuracy"
-                    value="generally-reasonable"
-                    checked={formData.accuracy === "generally-reasonable"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    The suggestions were generally reasonable and plausible
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="accuracy"
-                    value="mostly-clear-accurate"
-                    checked={formData.accuracy === "mostly-clear-accurate"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Most suggestions were clear and accurate
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="accuracy"
-                    value="highly-logical"
-                    checked={formData.accuracy === "highly-logical"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    All suggestions were highly logical and well-grounded
-                  </span>
-                </label>
+                {[
+                  {
+                    value: "mostly-incorrect",
+                    label: "The suggestions were mostly incorrect or irrelevant",
+                  },
+                  {
+                    value: "some-made-sense",
+                    label: "Some suggestions made sense, but others seemed off",
+                  },
+                  {
+                    value: "generally-reasonable",
+                    label: "The suggestions were generally reasonable and plausible",
+                  },
+                  {
+                    value: "mostly-clear-accurate",
+                    label: "Most suggestions were clear and accurate",
+                  },
+                  {
+                    value: "highly-logical",
+                    label: "All suggestions were highly logical and well-grounded",
+                  },
+                ].map((opt) => (
+                  <label key={opt.value} className={styles.radioOption}>
+                    <input
+                      type="radio"
+                      name="accuracy"
+                      value={opt.value}
+                      checked={formData.accuracy === opt.value}
+                      onChange={handleChange}
+                      className={styles.radioInput}
+                    />
+                    <span className={styles.radioLabel}>{opt.label}</span>
+                  </label>
+                ))}
               </div>
               {errors.accuracy && (
                 <span className={styles.errorMessage}>{errors.accuracy}</span>
               )}
             </div>
 
+            {/* Helpfulness Question */}
             <div className={styles.questionGroup}>
               <h2 className={styles.questionTitle}>
                 How helpful were the AI's suggestions in supporting your
                 creative thinking?
               </h2>
               <p className={styles.questionSubtitle}>
-                Think about whether the ideas inspired or guided your own
-                thinking.
+                Think about whether the ideas inspired or guided your own thinking.
               </p>
               <div className={styles.radioGroup}>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="helpfulness"
-                    value="not-helpful"
-                    checked={formData.helpfulness === "not-helpful"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Not helpful at all — I didn't use any of the AI suggestions
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="helpfulness"
-                    value="slightly-helpful"
-                    checked={formData.helpfulness === "slightly-helpful"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Slightly helpful — One or two ideas gave me a small nudge
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="helpfulness"
-                    value="moderately-helpful"
-                    checked={formData.helpfulness === "moderately-helpful"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Moderately helpful — The ideas helped me brainstorm better
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="helpfulness"
-                    value="very-helpful"
-                    checked={formData.helpfulness === "very-helpful"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Very helpful — The suggestions pushed me in new directions
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="helpfulness"
-                    value="extremely-helpful"
-                    checked={formData.helpfulness === "extremely-helpful"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Extremely helpful — The AI greatly enhanced my creativity
-                  </span>
-                </label>
+                {[
+                  {
+                    value: "not-helpful",
+                    label: "Not helpful at all — I didn't use any of the AI suggestions",
+                  },
+                  {
+                    value: "slightly-helpful",
+                    label: "Slightly helpful — One or two ideas gave me a small nudge",
+                  },
+                  {
+                    value: "moderately-helpful",
+                    label: "Moderately helpful — The ideas helped me brainstorm better",
+                  },
+                  {
+                    value: "very-helpful",
+                    label: "Very helpful — The suggestions pushed me in new directions",
+                  },
+                  {
+                    value: "extremely-helpful",
+                    label: "Extremely helpful — The AI greatly enhanced my creativity",
+                  },
+                ].map((opt) => (
+                  <label key={opt.value} className={styles.radioOption}>
+                    <input
+                      type="radio"
+                      name="helpfulness"
+                      value={opt.value}
+                      checked={formData.helpfulness === opt.value}
+                      onChange={handleChange}
+                      className={styles.radioInput}
+                    />
+                    <span className={styles.radioLabel}>{opt.label}</span>
+                  </label>
+                ))}
               </div>
               {errors.helpfulness && (
-                <span className={styles.errorMessage}>
-                  {errors.helpfulness}
-                </span>
+                <span className={styles.errorMessage}>{errors.helpfulness}</span>
               )}
             </div>
           </>
@@ -270,6 +220,7 @@ function TaskPostSurvey() {
 
         {isBaselineTask && (
           <>
+            {/* Confidence Question */}
             <div className={styles.questionGroup}>
               <h2 className={styles.questionTitle}>
                 How confident are you in the quality of your application ideas?
@@ -278,156 +229,59 @@ function TaskPostSurvey() {
                 Think about how creative, useful, and novel your ideas were.
               </p>
               <div className={styles.radioGroup}>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="confidence"
-                    value="not-confident"
-                    checked={formData.confidence === "not-confident"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Not confident at all — My ideas were basic or unoriginal
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="confidence"
-                    value="slightly-confident"
-                    checked={formData.confidence === "slightly-confident"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Slightly confident — I had some decent ideas but nothing
-                    special
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="confidence"
-                    value="moderately-confident"
-                    checked={formData.confidence === "moderately-confident"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Moderately confident — My ideas were reasonably creative and
-                    useful
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="confidence"
-                    value="very-confident"
-                    checked={formData.confidence === "very-confident"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Very confident — I came up with some innovative and
-                    practical ideas
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="confidence"
-                    value="extremely-confident"
-                    checked={formData.confidence === "extremely-confident"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Extremely confident — My ideas were highly creative and
-                    groundbreaking
-                  </span>
-                </label>
+                {[
+                  "not-confident",
+                  "slightly-confident",
+                  "moderately-confident",
+                  "very-confident",
+                  "extremely-confident",
+                ].map((val) => (
+                  <label key={val} className={styles.radioOption}>
+                    <input
+                      type="radio"
+                      name="confidence"
+                      value={val}
+                      checked={formData.confidence === val}
+                      onChange={handleChange}
+                      className={styles.radioInput}
+                    />
+                    <span className={styles.radioLabel}>{val}</span>
+                  </label>
+                ))}
               </div>
               {errors.confidence && (
                 <span className={styles.errorMessage}>{errors.confidence}</span>
               )}
             </div>
 
+            {/* Difficulty Question */}
             <div className={styles.questionGroup}>
               <h2 className={styles.questionTitle}>
                 How difficult did you find this task?
               </h2>
               <p className={styles.questionSubtitle}>
-                Consider the mental effort required to generate creative
-                applications.
+                Consider the mental effort required to generate creative applications.
               </p>
               <div className={styles.radioGroup}>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="difficulty"
-                    value="very-easy"
-                    checked={formData.difficulty === "very-easy"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Very easy — Ideas came to me naturally and quickly
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="difficulty"
-                    value="somewhat-easy"
-                    checked={formData.difficulty === "somewhat-easy"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Somewhat easy — I could think of ideas without much struggle
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="difficulty"
-                    value="moderate"
-                    checked={formData.difficulty === "moderate"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Moderate — Required some thinking but manageable
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="difficulty"
-                    value="somewhat-difficult"
-                    checked={formData.difficulty === "somewhat-difficult"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Somewhat difficult — Had to work hard to come up with good
-                    ideas
-                  </span>
-                </label>
-                <label className={styles.radioOption}>
-                  <input
-                    type="radio"
-                    name="difficulty"
-                    value="very-difficult"
-                    checked={formData.difficulty === "very-difficult"}
-                    onChange={handleChange}
-                    className={styles.radioInput}
-                  />
-                  <span className={styles.radioLabel}>
-                    Very difficult — Struggled significantly to generate ideas
-                  </span>
-                </label>
+                {[
+                  "very-easy",
+                  "somewhat-easy",
+                  "moderate",
+                  "somewhat-difficult",
+                  "very-difficult",
+                ].map((val) => (
+                  <label key={val} className={styles.radioOption}>
+                    <input
+                      type="radio"
+                      name="difficulty"
+                      value={val}
+                      checked={formData.difficulty === val}
+                      onChange={handleChange}
+                      className={styles.radioInput}
+                    />
+                    <span className={styles.radioLabel}>{val}</span>
+                  </label>
+                ))}
               </div>
               {errors.difficulty && (
                 <span className={styles.errorMessage}>{errors.difficulty}</span>

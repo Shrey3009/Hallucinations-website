@@ -10,14 +10,13 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
   const { surveyId } = useSurvey();
   const preSurveyId = surveyId;
   const [timeLeft, setTimeLeft] = useState(180); // 180 seconds = 3 minutes
-  const [currentPatent, setCurrentPatent] = useState(randomString || null);
+  const [currentPatent, setCurrentPatent] = useState(null);
 
   // Fetch patent for the current task
   useEffect(() => {
     if (preSurveyId && task) {
       fetchPatentForTask();
     } else if (randomString) {
-      // If no API data but randomString is provided, use it
       console.log("Using provided randomString as patent:", randomString);
       setCurrentPatent(randomString);
     }
@@ -50,21 +49,17 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
   }, [round]);
 
   useEffect(() => {
-    // If timeLeft is 0, submit the form/data
     if (timeLeft === 0) {
       handleSubmit();
     }
 
-    // Set interval to countdown the timer
     const intervalId = setInterval(() => {
       setTimeLeft(timeLeft - 1);
     }, 1000);
 
-    // Clear interval on re-render to prevent memory leaks
     return () => clearInterval(intervalId);
   }, [timeLeft]);
 
-  // Convert seconds into minutes and seconds for display
   const formatTime = () => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
@@ -133,7 +128,40 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
           </h2>
           <div className={styles.patentDescription}>
             <h3>Patent Description:</h3>
-            <p>{currentPatent?.abstract || "Loading patent description..."}</p>
+            {currentPatent?.patentDescription ? (
+              (() => {
+                const text = currentPatent.patentDescription || "";
+                const [summaryPart, detailsPart] =
+                  text.split("Key Technical Details:");
+
+                return (
+                  <>
+                    <p>
+                      <strong>Summary:</strong>{" "}
+                      {summaryPart.replace("Summary:", "").trim()}
+                    </p>
+
+                    {detailsPart && (
+                      <>
+                        <p><strong>Key Technical Details:</strong></p>
+                        <div style={{ textAlign: "left", marginLeft: "1rem" }}>
+                          {detailsPart
+                            .trim()
+                            .split("\n")
+                            .map((line, index) =>
+                              line.trim() ? (
+                                <p key={index}>{line.trim()}</p>
+                              ) : null
+                            )}
+                        </div>
+                      </>
+                    )}
+                  </>
+                );
+              })()
+            ) : (
+              "Loading patent description..."
+            )}
           </div>
         </div>
         <p className={styles.taskDescription}>

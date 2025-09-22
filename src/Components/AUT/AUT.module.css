@@ -245,3 +245,18 @@
     margin-bottom: 0.5rem;
   }
 }
+.patentDescription {
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.patentDescription p {
+  font-size: 1.2rem;   /* bump size */
+  line-height: 1.6;
+}
+
+.patentDescription h3 {
+  font-size: 1.4rem;   /* bigger heading */
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}

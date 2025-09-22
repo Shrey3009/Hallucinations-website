@@ -13,7 +13,7 @@ function AUT() {
   const navigate = useNavigate();
   const preSurveyId = surveyId;
   const { data, setData } = useData();
-  const [randomString, setRandomString] = useState("");
+  const [randomString, setRandomString] = useState(null);
   const [timeLeft, setTimeLeft] = useState(300); // 300 seconds = 5 minutes
 
   // Scroll to top when component mounts
@@ -39,7 +39,6 @@ function AUT() {
       if (response.ok) {
         const patentData = await response.json();
         setRandomString(patentData.data);
-        console.log("Patent fetched for Task 1:", patentData.data.patentName);
         console.log("Patent fetched for Task 1:", patentData.data.patentName);
       } else {
         console.error(`API failed with status: ${response.status}`);
@@ -148,7 +147,42 @@ function AUT() {
           </h2>
           <div className={styles.patentDescription}>
             <h3>Patent Description:</h3>
-            <p>{randomString?.abstract || "Loading patent description..."}</p>
+            {randomString?.patentDescription ? (
+              (() => {
+                const text = randomString.patentDescription || "";
+                const [summaryPart, detailsPart] =
+                  text.split("Key Technical Details:");
+
+                return (
+                  <>
+                    {/* Summary */}
+                    <p>
+                      <strong>Summary:</strong>{" "}
+                      {summaryPart.replace("Summary:", "").trim()}
+                    </p>
+
+                    {/* Key Technical Details */}
+                    {detailsPart && (
+                      <>
+                        <p><strong>Key Technical Details:</strong></p>
+                        <div style={{ textAlign: "left", marginLeft: "1rem" }}>
+                          {detailsPart
+                            .trim()
+                            .split("\n")
+                            .map((line, index) =>
+                              line.trim() ? (
+                                <p key={index}>{line.trim()}</p>
+                              ) : null
+                            )}
+                        </div>
+                      </>
+                    )}
+                  </>
+                );
+              })()
+            ) : (
+              "Loading patent description..."
+            )}
           </div>
         </div>
         <p className={styles.taskDescription}>

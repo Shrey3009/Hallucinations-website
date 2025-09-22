@@ -46,7 +46,7 @@ function Task2Page() {
             </p>
           </div>
 
-          <div className={styles.card}>
+          {/* <div className={styles.card}>
             <h2 className={styles.cardTitle}>Important Notes</h2>
             <ul className={styles.notesList}>
               <li>
@@ -68,7 +68,7 @@ function Task2Page() {
                 usefulness, and novelty.
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
 
         <div className={styles.buttonContainer}>
