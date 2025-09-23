@@ -36,7 +36,7 @@ function PostSurvey() {
 
     try {
       const response = await fetch(
-        import.meta.env.VITE_NODE_API + "/PostSurvey",
+        `${import.meta.env.VITE_NODE_API}/api/PostSurvey`,
         {
           method: "POST",
           headers: {

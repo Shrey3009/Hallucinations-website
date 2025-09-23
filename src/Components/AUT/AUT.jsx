@@ -91,7 +91,8 @@ function AUT() {
     if (e) e.preventDefault();
 
     try {
-      const response = await fetch(import.meta.env.VITE_NODE_API + "/AUT", {
+      const response = await fetch(
+         `${import.meta.env.VITE_NODE_API}/api/AUT`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -11,8 +11,9 @@ import {
 } from "@chatscope/chat-ui-kit-react";
 import { useSurvey } from "../../surveyIDContext";
 
-const API_KEY = import.meta.env.VITE_API_KEY;
-const API_URL = import.meta.env.VITE_NODE_API + "/api/chatbotmessages";
+// API URLs (only backend, no API_KEY here)
+const API_URL = `${import.meta.env.VITE_NODE_API}/api/chatbotmessages`;
+const OPENAI_PROXY_URL = `${import.meta.env.VITE_NODE_API}/api/openai`;
 
 // system prompts
 const hallucinationConfigs = {
@@ -32,7 +33,7 @@ const hallucinationConfigs = {
     temperature: 2,
     top_p: 0.5,
     max_tokens: 2048,
-    system: `You are an AI assistant with complete creative freedom to interpret and reimagine patented technologies in unexpected and imaginative ways. Based on the technical description provided, generate three original applications of the technology. You may repurpose the technology’s components, reinterpret its intended function, or situate it in speculative, futuristic, or surreal scenarios.  Your response should include three sections. Each section must begin with an application title and a one-line summary, followed by a detailed explanation in one paragraph (approximately 200 to 300 words). Do not repeat the same application idea across sections; ensure each application is distinct. There are no constraints on scientific realism, feasibility, or practicality - feel free to explore bold, whimsical, ironic, or unconventional directions. While creativity is encouraged, your response should remain coherent and readable. Do not produce outputs with garbled language, broken syntax, or unintelligible symbols. The result should feel imaginative yet meaningfully constructed.`,
+    system: `You are an AI assistant with complete creative freedom to interpret and reimagine patented technologies in unexpected and imaginative ways. Based on the technical description provided, generate three original applications of the technology. You may repurpose the technology’s components, reinterpret its intended function, or situate it in speculative, futuristic, or surreal scenarios.  Your response should include three sections. Each section must begin with an application title and a one-line summary, followed by a detailed explanation in one paragraph (approximately 200 to 300 words). Do not repeat the same application idea across sections; ensure each application is distinct. There are no constraints on scientific realism, feasibility, or practicality - feel free to explore bold, whimsical, ironic, or unconventional directions. While creativity is encouraged, your response should remain coherent and readable. Do not produce outputs with garbled language, broken syntax, or unintelligible symbols. The result should feel imaginative yet meaningfully constructed.`
   },
 };
 
@@ -40,7 +41,8 @@ const hallucinationConfigs = {
 function isValidResponse(text) {
   if (!text) return false;
   const words = text.split(/\s+/);
-  const gibberishRatio = (text.match(/[^\x00-\x7F]/g) || []).length / text.length;
+  const gibberishRatio =
+    (text.match(/[^\x00-\x7F]/g) || []).length / text.length;
   return words.length > 5 && gibberishRatio < 0.3;
 }
 
@@ -112,7 +114,6 @@ function Chatbot({ task, round, resetToggle, onReset, level }) {
     }
 
     const apiRequestBody = {
-      model: "gpt-3.5-turbo",
       messages: [
         { role: "system", content: config.system },
         ...chatMessages.map((m) => ({
@@ -120,25 +121,26 @@ function Chatbot({ task, round, resetToggle, onReset, level }) {
           content: m.message,
         })),
       ],
-      temperature: config.temperature,
-      top_p: config.top_p,
-      max_tokens: config.max_tokens,
+      config: {
+        temperature: config.temperature,
+        top_p: config.top_p,
+        max_tokens: config.max_tokens,
+      },
     };
 
     try {
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      // Call backend OpenAI proxy
+      const response = await fetch(OPENAI_PROXY_URL, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${API_KEY}`,
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(apiRequestBody),
       });
 
       const data = await response.json();
-      let text = data.choices?.[0]?.message?.content || "";
+      let text = data.reply?.content || "";
       if (!isValidResponse(text)) {
-        text = "⚠️ Sorry, the AI response was invalid. Please try again.";
+        text =
+          "⚠️ Sorry, the AI response was invalid. Please try again.";
       }
 
       const botMessage = {
@@ -147,9 +149,19 @@ function Chatbot({ task, round, resetToggle, onReset, level }) {
         direction: "incoming",
       };
       setMessages([...chatMessages, botMessage]);
+
       await postChatGPTMessages([...chatMessages, botMessage]);
     } catch (err) {
       console.error("ChatGPT call failed:", err);
+      setMessages([
+        ...chatMessages,
+        {
+          message:
+            "⚠️ Error: Unable to reach backend. Please try again later.",
+          sender: "ChatGPT",
+          direction: "incoming",
+        },
+      ]);
     } finally {
       setIsTyping(false);
     }
@@ -164,8 +176,19 @@ function Chatbot({ task, round, resetToggle, onReset, level }) {
 
       const bodyData =
         task === 1
-          ? { preSurveyId: surveyId, task, round: null, chatMessages: sanitizedChats }
-          : { preSurveyId: surveyId, task, round, level, chatMessages: sanitizedChats };
+          ? {
+              preSurveyId: surveyId,
+              task,
+              round: null,
+              chatMessages: sanitizedChats,
+            }
+          : {
+              preSurveyId: surveyId,
+              task,
+              round,
+              level,
+              chatMessages: sanitizedChats,
+            };
 
       const response = await fetch(API_URL, {
         method: "POST",
@@ -174,9 +197,14 @@ function Chatbot({ task, round, resetToggle, onReset, level }) {
       });
 
       if (response.ok) {
-        console.log(`Submitted chat messages for task: ${task} round: ${round} level: ${level}`);
+        console.log(
+          `Submitted chat messages for task: ${task} round: ${round} level: ${level}`
+        );
       } else {
-        console.error("Failed to submit chat messages:", response.status);
+        console.error(
+          "Failed to submit chat messages:",
+          response.status
+        );
       }
     } catch (err) {
       console.error("Error submitting messages:", err);
@@ -193,7 +221,9 @@ function Chatbot({ task, round, resetToggle, onReset, level }) {
         <ChatContainer>
           <MessageList
             typingIndicator={
-              isTyping ? <TypingIndicator content="ChatGPT is typing..." /> : null
+              isTyping ? (
+                <TypingIndicator content="ChatGPT is typing..." />
+              ) : null
             }
           >
             {messages.map((msg, i) => (
@@ -217,7 +247,10 @@ function Chatbot({ task, round, resetToggle, onReset, level }) {
         )}
         {task >= 2 && task <= 4 && round === 2 && (
           <div className={styles.promptLimitNote}>
-            <div>Only 3 prompts allowed ⚠️</div>  <div>Modify or build on previously generated ideas.</div>
+            <div>Only 3 prompts allowed ⚠️</div>
+            <div>
+              Modify or build on previously generated ideas.
+            </div>
           </div>
         )}
       </div>

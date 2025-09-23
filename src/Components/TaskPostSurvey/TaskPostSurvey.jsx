@@ -50,7 +50,7 @@ function TaskPostSurvey() {
         payload.helpfulness = formData.helpfulness;
       }
 
-      // ✅ For baseline task (1)
+      // For baseline task (1)
       if (currentTask === 1) {
         payload.confidence = formData.confidence;
         payload.difficulty = formData.difficulty;
@@ -59,7 +59,7 @@ function TaskPostSurvey() {
       console.log("Payload being sent:", payload);
 
       const response = await fetch(
-        import.meta.env.VITE_NODE_API + "/TaskPostSurvey",
+         `${import.meta.env.VITE_NODE_API}/api/TaskPostSurvey`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

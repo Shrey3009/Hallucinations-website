@@ -25,3 +25,5 @@ dist-ssr
 .env
 .env.local
 system prompt gpt
+netlify.toml
+vercel.json

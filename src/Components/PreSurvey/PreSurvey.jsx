@@ -54,7 +54,7 @@ function SurveyForm() {
 
     try {
       const response = await fetch(
-        import.meta.env.VITE_NODE_API + "/PreSurvey",
+        `${import.meta.env.VITE_NODE_API}/api/PreSurvey`,
         {
           method: "POST",
           headers: {

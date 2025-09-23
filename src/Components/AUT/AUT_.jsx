@@ -82,7 +82,7 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
     if (e) e.preventDefault();
 
     try {
-      let NODE_api = import.meta.env.VITE_NODE_API + "/AUT_gpt";
+      let NODE_api = `${import.meta.env.VITE_NODE_API}/api/AUT_gpt`;
       const response = await fetch(NODE_api, {
         method: "POST",
         headers: {

@@ -30,7 +30,7 @@ function Task2PostSurvey() {
 
     try {
       const response = await fetch(
-        import.meta.env.VITE_NODE_API + "/TaskPostSurvey",
+        `${import.meta.env.VITE_NODE_API}/api/TaskPostSurvey`,
         {
           method: "POST",
           headers: {

@@ -39,7 +39,7 @@ function Task3PostSurvey() {
       console.log("Payload being sent:", payload);
 
       const response = await fetch(
-        import.meta.env.VITE_NODE_API + "/TaskPostSurvey",
+        `${import.meta.env.VITE_NODE_API}/api/TaskPostSurvey`,
         {
           method: "POST",
           headers: {
