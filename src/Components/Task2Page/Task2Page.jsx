@@ -35,10 +35,7 @@ function Task2Page() {
             <ul className={styles.taskList}>
               <li>Round 1: Ask the AI for 3 possible application ideas</li>
               <li>Round 2: Reflect and build on AI's suggestions</li>
-              <li>
-                Round 3: Finalize your own set of 3 improved or original
-                applications
-              </li>
+          
             </ul>
             <p className={styles.note}>
               Each round will have specific instructions on how to interact with

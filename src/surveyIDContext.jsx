@@ -3,16 +3,16 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 // Create a Context
 const SurveyContext = createContext(null);
 
-// Provider in your app's component tree
 export const SurveyProvider = ({ children }) => {
+  // PreSurvey ID (needed for tasks + final PostSurvey)
   const [surveyId, setSurveyId] = useState(() => {
-    // Retrieve from local storage or return null
     return localStorage.getItem("surveyId") || null;
   });
 
   useEffect(() => {
-    // Persist to local storage
-    localStorage.setItem("surveyId", surveyId);
+    if (surveyId) {
+      localStorage.setItem("surveyId", surveyId);
+    }
   }, [surveyId]);
 
   return (
@@ -22,5 +22,5 @@ export const SurveyProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use the surveyId context
+// Custom hook to use surveyId
 export const useSurvey = () => useContext(SurveyContext);

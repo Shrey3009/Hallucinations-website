@@ -21,19 +21,19 @@ const hallucinationConfigs = {
     temperature: 0,
     top_p: 0.5,
     max_tokens: 2048,
-    system: `You are an AI assistant that specializes in identifying real-world applications of patented technologies. Based on the technical description provided, generate three practical applications of this technology that is physically realistic and clearly plausible with current technology. Your response should include three sections. Each section must begin with an application title and a one-line summary, followed by a detailed explanation in one paragraph (approximately 200 to 300 words). Do not repeat the same application idea across sections; ensure each application is distinct. The explanation should focus on how the application directly builds on the functions or mechanisms described in the patent, how it could realistically be implemented, and why it is technically feasible. Avoid introducing features or use cases that are not explicitly supported by the patent. Do not speculate about future advancements or imagined enhancements—stay grounded in the content provided.`,
+    system: `You are an AI assistant that specializes in identifying real-world applications of patented technologies. Based on the technical description provided, generate three practical applications ...`,
   },
   medium: {
     temperature: 1,
     top_p: 0.5,
     max_tokens: 2048,
-    system: `You are an AI assistant that explores inventive but grounded applications of patented technologies. Based on the technical description provided, generate three creative applications of this technology that builds upon its described functions or mechanisms. Your response should include three sections. Each section must begin with an application title and a one-line summary, followed by a detailed explanation in one paragraph (approximately 200 to 300 words). Do not repeat the same application idea across sections; ensure each application is distinct. The explanation should explore adjacent or unexpected use cases that are not explicitly mentioned in the patent but are technically plausible given the capabilities described. You may reinterpret, combine, or repurpose the functions in novel ways. Moderate speculation is encouraged, as long as the core technical logic remains anchored in the original invention. Avoid purely fictional technologies or wildly futuristic scenarios.`,
+    system: `You are an AI assistant that explores inventive but grounded applications of patented technologies. Based on the technical description provided, generate three creative applications ...`,
   },
   high: {
     temperature: 2,
     top_p: 0.5,
     max_tokens: 2048,
-    system: `You are an AI assistant with complete creative freedom to interpret and reimagine patented technologies in unexpected and imaginative ways. Based on the technical description provided, generate three original applications of the technology. You may repurpose the technology’s components, reinterpret its intended function, or situate it in speculative, futuristic, or surreal scenarios.  Your response should include three sections. Each section must begin with an application title and a one-line summary, followed by a detailed explanation in one paragraph (approximately 200 to 300 words). Do not repeat the same application idea across sections; ensure each application is distinct. There are no constraints on scientific realism, feasibility, or practicality - feel free to explore bold, whimsical, ironic, or unconventional directions. While creativity is encouraged, your response should remain coherent and readable. Do not produce outputs with garbled language, broken syntax, or unintelligible symbols. The result should feel imaginative yet meaningfully constructed.`
+    system: `You are an AI assistant with complete creative freedom to interpret and reimagine patented technologies in unexpected and imaginative ways. Based on the technical description provided, generate three original applications ...`,
   },
 };
 
@@ -67,6 +67,7 @@ function Chatbot({ task, round, resetToggle, onReset, level }) {
           direction: "incoming",
         },
       ]);
+      setPromptCount(0);   // ✅ Reset count on reset
       onReset();
     }
   }, [resetToggle, onReset]);
@@ -129,7 +130,6 @@ function Chatbot({ task, round, resetToggle, onReset, level }) {
     };
 
     try {
-      // Call backend OpenAI proxy
       const response = await fetch(OPENAI_PROXY_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -139,8 +139,7 @@ function Chatbot({ task, round, resetToggle, onReset, level }) {
       const data = await response.json();
       let text = data.reply?.content || "";
       if (!isValidResponse(text)) {
-        text =
-          "⚠️ Sorry, the AI response was invalid. Please try again.";
+        text = "⚠️ Sorry, the AI response was invalid. Please try again.";
       }
 
       const botMessage = {
@@ -201,10 +200,7 @@ function Chatbot({ task, round, resetToggle, onReset, level }) {
           `Submitted chat messages for task: ${task} round: ${round} level: ${level}`
         );
       } else {
-        console.error(
-          "Failed to submit chat messages:",
-          response.status
-        );
+        console.error("Failed to submit chat messages:", response.status);
       }
     } catch (err) {
       console.error("Error submitting messages:", err);
@@ -213,10 +209,8 @@ function Chatbot({ task, round, resetToggle, onReset, level }) {
 
   return (
     <div className={styles.chatbot}>
-      {/* Title bar */}
       <div className={styles.chatHeader}>ChatGPT</div>
 
-      {/* Chat + input grouped cleanly */}
       <MainContainer style={{ height: "600px" }}>
         <ChatContainer>
           <MessageList
@@ -233,7 +227,6 @@ function Chatbot({ task, round, resetToggle, onReset, level }) {
         </ChatContainer>
       </MainContainer>
 
-      {/* Input and red note */}
       <div className={styles.inputWrapper}>
         <MessageInput
           placeholder="Type your message..."
@@ -248,9 +241,7 @@ function Chatbot({ task, round, resetToggle, onReset, level }) {
         {task >= 2 && task <= 4 && round === 2 && (
           <div className={styles.promptLimitNote}>
             <div>Only 3 prompts allowed ⚠️</div>
-            <div>
-              Modify or build on previously generated ideas.
-            </div>
+            <div>Modify or build on previously generated ideas.</div>
           </div>
         )}
       </div>

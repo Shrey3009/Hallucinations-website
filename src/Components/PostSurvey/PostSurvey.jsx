@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./PostSurvey.module.css";
 import { useNavigate } from "react-router-dom";
 import { useSurvey } from "../../surveyIDContext";
 
 function PostSurvey() {
   const [formData, setFormData] = useState({
-    enjoyment: "",
-    difficulty: "",
-    aiHelpfulness: "",
-    aiInteraction: "",
-    creativity: "",
-    feedback: "",
+    accuracy: "",
+    helpfulness: "",
+    inspiration: "",
+    expansion: "",
+    recombination: "",
+    problems: "",
     improvements: "",
     agreeToTerms: false,
   });
@@ -19,13 +19,19 @@ function PostSurvey() {
   const navigate = useNavigate();
   const { surveyId } = useSurvey();
 
+   useEffect(() => {
+    console.log("PostSurvey mounted, surveyId =", surveyId);
+    if (!surveyId) {
+      console.warn("⚠️ surveyId is missing! The PostSurvey cannot be linked to PreSurvey.");
+    }
+  }, [surveyId]);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevState) => ({
       ...prevState,
       [name]: type === "checkbox" ? checked : value,
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
     }
@@ -35,13 +41,38 @@ function PostSurvey() {
     e.preventDefault();
 
     try {
+
+      if (!surveyId) {
+        console.error("❌ No surveyId found in context, cannot submit PostSurvey");
+        alert("Error: PreSurvey ID is missing. Did you complete the PreSurvey first?");
+        return;
+      }
+
+      // Debug check 2: required fields
+      for (const key of ["accuracy", "helpfulness", "inspiration", "expansion", "recombination"]) {
+        if (!formData[key]) {
+          console.error(`❌ Missing required field: ${key}`);
+        }
+      }
+
+        console.log(
+  "Final PostSurvey payload:",
+  JSON.stringify(
+    {
+      ...formData,
+      preSurveyId: surveyId,
+    },
+    null,
+    2
+  )
+);
+    console.log("surveyId from context:", surveyId);
+
       const response = await fetch(
         `${import.meta.env.VITE_NODE_API}/api/PostSurvey`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ...formData,
             preSurveyId: surveyId,
@@ -50,23 +81,7 @@ function PostSurvey() {
       );
 
       const data = await response.json();
-      console.log("data", data);
       if (!response.ok) {
-        // if (data.errors) {
-        //   const newErrors = {};
-        //   // Check if data.errors is an array before using forEach
-        //   if (Array.isArray(data.errors)) {
-        //     data.errors.forEach((error) => {
-        //       const field = error.toLowerCase().split(" ")[0];
-        //       newErrors[field] = error;
-        //     });
-        //   } else {
-        //     // Handle case where errors is not an array
-        //     newErrors.form = "Invalid error format received from server";
-        //   }
-        //   setErrors(newErrors);
-        //   throw new Error("Please correct the highlighted errors");
-        // }
         throw new Error(data.message || "Failed to submit form");
       }
 
@@ -83,175 +98,259 @@ function PostSurvey() {
         <div className={styles.header}>
           <h1 className={styles.title}>Post-Task Survey</h1>
           <p className={styles.description}>
-            Please help us understand your experience with the alternative uses
-            task and AI interaction.
+            Please help us understand your experience with the AI assistant.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
+      {/* Q1 Accuracy */}
+<div className={styles.questionGroup}>
+  <h2 className={styles.questionTitle}>Q1. How accurate or reasonable did you find the AI’s suggestions overall?</h2>
+
+  <div className={styles.radioGroup}>
+    <label className={styles.radioOption}>
+      <input
+        type="radio"
+        name="accuracy"
+        value="mostly-incorrect"
+        checked={formData.accuracy === "mostly-incorrect"}
+        onChange={handleChange}
+        className={styles.radioInput}
+        required
+      />
+      <span className={styles.radioLabel}>
+        The suggestions were mostly incorrect or irrelevant
+      </span>
+    </label>
+    <label className={styles.radioOption}>
+      <input
+        type="radio"
+        name="accuracy"
+        value="some-made-sense"
+        checked={formData.accuracy === "some-made-sense"}
+        onChange={handleChange}
+        className={styles.radioInput}
+      />
+      <span className={styles.radioLabel}>
+        Some suggestions made sense, but others seemed off
+      </span>
+    </label>
+    <label className={styles.radioOption}>
+      <input
+        type="radio"
+        name="accuracy"
+        value="generally-reasonable"
+        checked={formData.accuracy === "generally-reasonable"}
+        onChange={handleChange}
+        className={styles.radioInput}
+      />
+      <span className={styles.radioLabel}>
+        The suggestions were generally reasonable and plausible
+      </span>
+    </label>
+    <label className={styles.radioOption}>
+      <input
+        type="radio"
+        name="accuracy"
+        value="mostly-clear-accurate"
+        checked={formData.accuracy === "mostly-clear-accurate"}
+        onChange={handleChange}
+        className={styles.radioInput}
+      />
+      <span className={styles.radioLabel}>
+        Most suggestions were clear and accurate
+      </span>
+    </label>
+    <label className={styles.radioOption}>
+      <input
+        type="radio"
+        name="accuracy"
+        value="highly-logical"
+        checked={formData.accuracy === "highly-logical"}
+        onChange={handleChange}
+        className={styles.radioInput}
+      />
+      <span className={styles.radioLabel}>
+        All suggestions were highly logical and well-grounded
+      </span>
+    </label>
+  </div>
+  {errors.accuracy && (
+    <span className={styles.errorMessage}>{errors.accuracy}</span>
+  )}
+</div>
+
+{/* Q2 Helpfulness */}
+<div className={styles.questionGroup}>
+  <h2 className={styles.questionTitle}>Q2. How helpful were the AI’s suggestions in supporting your creative thinking?
+</h2>
+
+  <div className={styles.radioGroup}>
+    <label className={styles.radioOption}>
+      <input
+        type="radio"
+        name="helpfulness"
+        value="not-helpful"
+        checked={formData.helpfulness === "not-helpful"}
+        onChange={handleChange}
+        className={styles.radioInput}
+        required
+      />
+      <span className={styles.radioLabel}>
+        Not helpful at all — I did not use any of the AI’s suggestions
+      </span>
+    </label>
+    <label className={styles.radioOption}>
+      <input
+        type="radio"
+        name="helpfulness"
+        value="slightly-helpful"
+        checked={formData.helpfulness === "slightly-helpful"}
+        onChange={handleChange}
+        className={styles.radioInput}
+      />
+      <span className={styles.radioLabel}>
+        Slightly helpful — One or two ideas provided a small nudge
+      </span>
+    </label>
+    <label className={styles.radioOption}>
+      <input
+        type="radio"
+        name="helpfulness"
+        value="moderately-helpful"
+        checked={formData.helpfulness === "moderately-helpful"}
+        onChange={handleChange}
+        className={styles.radioInput}
+      />
+      <span className={styles.radioLabel}>
+        Moderately helpful — The suggestions helped me brainstorm more effectively
+      </span>
+    </label>
+    <label className={styles.radioOption}>
+      <input
+        type="radio"
+        name="helpfulness"
+        value="very-helpful"
+        checked={formData.helpfulness === "very-helpful"}
+        onChange={handleChange}
+        className={styles.radioInput}
+      />
+      <span className={styles.radioLabel}>
+        Very helpful — The suggestions pushed me in new directions
+      </span>
+    </label>
+    <label className={styles.radioOption}>
+      <input
+        type="radio"
+        name="helpfulness"
+        value="extremely-helpful"
+        checked={formData.helpfulness === "extremely-helpful"}
+        onChange={handleChange}
+        className={styles.radioInput}
+      />
+      <span className={styles.radioLabel}>
+        Extremely helpful — The AI greatly enhanced my creativity
+      </span>
+    </label>
+  </div>
+  {errors.helpfulness && (
+    <span className={styles.errorMessage}>{errors.helpfulness}</span>
+  )}
+</div>
+
+
+          {/* Q3 Inspiration (dropdown) */}
           <div className={styles.formGroup}>
-            <label className={styles.label}>How enjoyable was the task?</label>
+            <h2 className={styles.questionTitle}>
+              Q3. To what extent did the AI’s suggestions inspire you to think of new directions?
+            </h2>
             <select
-              name="enjoyment"
-              value={formData.enjoyment}
+              name="inspiration"
+              value={formData.inspiration}
               onChange={handleChange}
-              className={`${styles.field} ${
-                errors.enjoyment ? styles.error : ""
-              }`}
+              className={`${styles.field} ${errors.inspiration ? styles.error : ""}`}
               required
             >
               <option value="">Select an option</option>
-              <option value="1">1 - Not enjoyable at all</option>
-              <option value="2">2 - Slightly enjoyable</option>
-              <option value="3">3 - Moderately enjoyable</option>
-              <option value="4">4 - Very enjoyable</option>
-              <option value="5">5 - Extremely enjoyable</option>
+              <option value="1">1 – Not at all inspiring — no new directions came to mind</option>
+    <option value="2">2 – Slightly inspiring — a small spark of new thinking</option>
+    <option value="3">3 – Moderately inspiring — some useful new directions emerged</option>
+    <option value="4">4 – Very inspiring — many new directions came to mind</option>
+    <option value="5">5 – Extremely inspiring — the suggestions strongly shaped my thinking in new ways</option>
             </select>
-            {errors.enjoyment && (
-              <span className={styles.errorMessage}>{errors.enjoyment}</span>
-            )}
           </div>
 
+          {/* Q4 Expansion (dropdown) */}
           <div className={styles.formGroup}>
-            <label className={styles.label}>How difficult was the task?</label>
+            <h2 className={styles.questionTitle}>
+              Q4. How much did the AI’s suggestions help you expand or elaborate on your ideas?
+            </h2>
             <select
-              name="difficulty"
-              value={formData.difficulty}
+              name="expansion"
+              value={formData.expansion}
               onChange={handleChange}
-              className={`${styles.field} ${
-                errors.difficulty ? styles.error : ""
-              }`}
+              className={`${styles.field} ${errors.expansion ? styles.error : ""}`}
               required
             >
               <option value="">Select an option</option>
-              <option value="1">1 - Very easy</option>
-              <option value="2">2 - Easy</option>
-              <option value="3">3 - Moderate</option>
-              <option value="4">4 - Difficult</option>
-              <option value="5">5 - Very difficult</option>
+              <option value="1">1 – Not at all — they did not help me expand my ideas</option>
+    <option value="2">2 – Slightly — provided a small addition to my ideas</option>
+    <option value="3">3 – Moderately — helped me add some details or depth</option>
+    <option value="4">4 – Quite a lot — significantly expanded or developed my ideas</option>
+    <option value="5">5 – A great deal — transformed my ideas into much richer versions</option>
             </select>
-            {errors.difficulty && (
-              <span className={styles.errorMessage}>{errors.difficulty}</span>
-            )}
           </div>
 
+          {/* Q5 Recombination (dropdown) */}
           <div className={styles.formGroup}>
-            <label className={styles.label}>
-              How helpful was the AI in generating ideas?
-            </label>
+            <h2 className={styles.questionTitle}>
+              Q5. Did the AI’s suggestions help you combine or recombine ideas in new ways?
+            </h2>
             <select
-              name="aiHelpfulness"
-              value={formData.aiHelpfulness}
+              name="recombination"
+              value={formData.recombination}
               onChange={handleChange}
-              className={`${styles.field} ${
-                errors.aiHelpfulness ? styles.error : ""
-              }`}
+              className={`${styles.field} ${errors.recombination ? styles.error : ""}`}
               required
             >
               <option value="">Select an option</option>
-              <option value="1">1 - Not helpful at all</option>
-              <option value="2">2 - Slightly helpful</option>
-              <option value="3">3 - Moderately helpful</option>
-              <option value="4">4 - Very helpful</option>
-              <option value="5">5 - Extremely helpful</option>
+              <option value="1">1 – Not at all — no new combinations emerged</option>
+    <option value="2">2 – Slightly — only one or two small combinations</option>
+    <option value="3">3 – Moderately — some useful recombinations occurred</option>
+    <option value="4">4 – Quite a lot — I created several new combinations of ideas</option>
+    <option value="5">5 – Very much so — the suggestions led to highly novel recombinations</option>
             </select>
-            {errors.aiHelpfulness && (
-              <span className={styles.errorMessage}>
-                {errors.aiHelpfulness}
-              </span>
-            )}
           </div>
 
+          {/* Q6 Problems */}
           <div className={styles.formGroup}>
-            <label className={styles.label}>
-              How was your interaction with the AI?
-            </label>
-            <select
-              name="aiInteraction"
-              value={formData.aiInteraction}
-              onChange={handleChange}
-              className={`${styles.field} ${
-                errors.aiInteraction ? styles.error : ""
-              }`}
-              required
-            >
-              <option value="">Select an option</option>
-              <option value="1">1 - Very poor</option>
-              <option value="2">2 - Poor</option>
-              <option value="3">3 - Fair</option>
-              <option value="4">4 - Good</option>
-              <option value="5">5 - Excellent</option>
-            </select>
-            {errors.aiInteraction && (
-              <span className={styles.errorMessage}>
-                {errors.aiInteraction}
-              </span>
-            )}
-          </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label}>
-              Did the AI help enhance your creativity?
-            </label>
-            <select
-              name="creativity"
-              value={formData.creativity}
-              onChange={handleChange}
-              className={`${styles.field} ${
-                errors.creativity ? styles.error : ""
-              }`}
-              required
-            >
-              <option value="">Select an option</option>
-              <option value="1">1 - Not at all</option>
-              <option value="2">2 - A little bit</option>
-              <option value="3">3 - Somewhat</option>
-              <option value="4">4 - Quite a bit</option>
-              <option value="5">5 - Significantly</option>
-            </select>
-            {errors.creativity && (
-              <span className={styles.errorMessage}>{errors.creativity}</span>
-            )}
-          </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label}>
-              What aspects of the AI interaction were most helpful?
-            </label>
+            <h2 className={styles.questionTitle}>
+              Q6. Please describe any problems or challenges you experienced.
+            </h2>
             <textarea
-              name="feedback"
-              value={formData.feedback}
+              name="problems"
+              value={formData.problems}
               onChange={handleChange}
-              className={`${styles.field} ${styles.textarea} ${
-                errors.feedback ? styles.error : ""
-              }`}
-              placeholder="Please share your thoughts..."
-              required
+              className={`${styles.field} ${styles.textarea}`}
+              placeholder="Write your response here..."
             />
-            {errors.feedback && (
-              <span className={styles.errorMessage}>{errors.feedback}</span>
-            )}
           </div>
 
+          {/* Q7 Improvements */}
           <div className={styles.formGroup}>
-            <label className={styles.label}>
-              How could the AI interaction be improved?
-            </label>
+            <h2 className={styles.questionTitle}>
+              Q7. In what ways could the AI interaction be improved?
+            </h2>
             <textarea
               name="improvements"
               value={formData.improvements}
               onChange={handleChange}
-              className={`${styles.field} ${styles.textarea} ${
-                errors.improvements ? styles.error : ""
-              }`}
-              placeholder="Your suggestions for improvement..."
-              required
+              className={`${styles.field} ${styles.textarea}`}
+              placeholder="Your suggestions..."
             />
-            {errors.improvements && (
-              <span className={styles.errorMessage}>{errors.improvements}</span>
-            )}
           </div>
 
+          {/* Agree to terms */}
           <div className={styles.formGroup}>
             <label className={styles.checkboxContainer}>
               <input
@@ -259,13 +358,9 @@ function PostSurvey() {
                 name="agreeToTerms"
                 checked={formData.agreeToTerms}
                 onChange={handleChange}
-                required
               />
               I agree that my responses can be used for research purposes
             </label>
-            {errors.agreeToTerms && (
-              <span className={styles.errorMessage}>{errors.agreeToTerms}</span>
-            )}
           </div>
 
           <div className={styles.submitContainer}>

@@ -33,7 +33,7 @@ function AUT_gpt() {
   }, [round]);
 
   useEffect(() => {
-    console.log("DATA in AUT_gpt when task is and preSurveyID: ", task, objectArray);
+    console.log("DATA in AUT_gpt when task is and surveyId: ", task, objectArray);
     if (task) {
       fetchPatentForTask();
     }
@@ -42,7 +42,7 @@ function AUT_gpt() {
   const fetchPatentForTask = async () => {
     try {
       if (!surveyId) {
-        console.error("No survey ID available for patent fetching");
+        console.error("No surveyId available for patent fetching");
         return;
       }
 
@@ -79,9 +79,17 @@ function AUT_gpt() {
   };
 
   useEffect(() => {
-    if (round === 3 && task > 1) {
-      console.log(`Task ${task} completed!`);
-      navigate("/TaskPostSurvey", { state: { task: task } });
+    if (task === 2 && round === 3) {
+      console.log("Task 2 completed!");
+      navigate("/AttentionTest2");
+    }
+    if (task === 3 && round === 3) {
+      console.log("Task 3 completed!");
+      navigate("/AttentionTest3");
+    }
+    if (task === 4 && round === 3) {
+      console.log("Task 4 completed!");
+      navigate("/PostSurvey");
     }
     if (task === 1) {
       console.log("Task 1 active – no GPT rounds");

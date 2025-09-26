@@ -11,7 +11,7 @@ function AUT() {
   const [errors, setErrors] = useState({});
   const { surveyId } = useSurvey();
   const navigate = useNavigate();
-  const preSurveyId = surveyId;
+  
   const { data, setData } = useData();
   const [randomString, setRandomString] = useState(null);
   const [timeLeft, setTimeLeft] = useState(300); // 300 seconds = 5 minutes
@@ -22,16 +22,16 @@ function AUT() {
   }, []);
 
   useEffect(() => {
-    if (preSurveyId) {
+    if (surveyId) {
       fetchPatentForTask();
     }
-  }, [preSurveyId]);
+  }, [surveyId]);
 
   const fetchPatentForTask = async () => {
     try {
       const apiUrl = `${
         import.meta.env.VITE_NODE_API
-      }/api/patent-for-task/${preSurveyId}/1`;
+      }/api/patent-for-task/${surveyId}/1`;
       console.log(`Attempting to fetch patent from: ${apiUrl}`);
 
       const response = await fetch(apiUrl);
@@ -49,22 +49,18 @@ function AUT() {
   };
 
   useEffect(() => {
-    // If timeLeft is 0, submit the form/data
     if (timeLeft === 0) {
       handleSubmit();
       setTimeLeft(300);
     }
 
-    // Set interval to countdown the timer
     const intervalId = setInterval(() => {
       setTimeLeft(timeLeft - 1);
     }, 1000);
 
-    // Clear interval on re-render to prevent memory leaks
     return () => clearInterval(intervalId);
   }, [timeLeft]);
 
-  // Convert seconds into minutes and seconds for display
   const formatTime = () => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
@@ -75,7 +71,6 @@ function AUT() {
     const newUseCases = [...useCases];
     newUseCases[index][type] = value;
     setUseCases(newUseCases);
-    // Clear error when user starts typing
     if (errors[`${type}_${index}`]) {
       setErrors((prev) => ({ ...prev, [`${type}_${index}`]: null }));
     }
@@ -99,8 +94,8 @@ function AUT() {
         },
         body: JSON.stringify({
           useCases,
-          preSurveyId: preSurveyId,
-          patent: randomString,
+          preSurveyId: surveyId,
+          object: randomString,
         }),
       });
 
@@ -114,7 +109,6 @@ function AUT() {
           const newErrors = {};
           if (Array.isArray(responseData.errors)) {
             responseData.errors.forEach((error) => {
-              // Assuming error format is "use_0 is required" or "explanation_1 is required"
               const [field, ...rest] = error.split(" ");
               newErrors[field] = rest.join(" ");
             });
@@ -156,13 +150,11 @@ function AUT() {
 
                 return (
                   <>
-                    {/* Summary */}
                     <p>
                       <strong>Summary:</strong>{" "}
                       {summaryPart.replace("Summary:", "").trim()}
                     </p>
 
-                    {/* Key Technical Details */}
                     {detailsPart && (
                       <>
                         <p><strong>Key Technical Details:</strong></p>

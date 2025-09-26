@@ -8,25 +8,25 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
     Array.from({ length: 3 }, () => ({ use: "", explanation: "" }))
   );
   const { surveyId } = useSurvey();
-  const preSurveyId = surveyId;
+  
   const [timeLeft, setTimeLeft] = useState(180); // 180 seconds = 3 minutes
   const [currentPatent, setCurrentPatent] = useState(null);
 
   // Fetch patent for the current task
   useEffect(() => {
-    if (preSurveyId && task) {
+    if (surveyId && task) {
       fetchPatentForTask();
     } else if (randomString) {
       console.log("Using provided randomString as patent:", randomString);
       setCurrentPatent(randomString);
     }
-  }, [preSurveyId, task, randomString]);
+  }, [surveyId, task, randomString]);
 
   const fetchPatentForTask = async () => {
     try {
       const apiUrl = `${
         import.meta.env.VITE_NODE_API
-      }/api/patent-for-task/${preSurveyId}/${task}`;
+      }/api/patent-for-task/${surveyId}/${task}`;
       console.log(`Attempting to fetch patent from: ${apiUrl}`);
 
       const response = await fetch(apiUrl);
@@ -90,9 +90,9 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
         },
         body: JSON.stringify({
           useCases,
-          preSurveyId,
+          preSurveyId: surveyId,
           round,
-          patent: currentPatent,
+          object: currentPatent,
           temperature,
           task,
         }),

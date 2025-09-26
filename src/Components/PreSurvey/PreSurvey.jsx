@@ -17,7 +17,7 @@ function SurveyForm() {
 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  const { surveyId, setSurveyId } = useSurvey();
+  const { setSurveyId } = useSurvey();   // ✅ only surveyId now
   const [selection, setSelection] = useState("");
   const [otherRace, setOtherRace] = useState("");
 
@@ -66,6 +66,8 @@ function SurveyForm() {
 
       const responseData = await response.json();
 
+      console.log("Full PreSurvey response:", responseData);
+
       if (!response.ok) {
         if (responseData.errors) {
           // Handle validation errors
@@ -82,7 +84,7 @@ function SurveyForm() {
       }
 
       console.log("Form submitted successfully:", responseData);
-      setSurveyId(responseData._id);
+      setSurveyId(responseData._id);   // ✅ store only surveyId
 
       // Assign patents to the user after successful PreSurvey submission
       try {
@@ -109,6 +111,7 @@ function SurveyForm() {
         } else {
           const patentData = await patentResponse.json();
           console.log("Patents assigned successfully:", patentData);
+          // ✅ no longer storing patentAssignmentId in context
         }
       } catch (patentError) {
         console.log(
