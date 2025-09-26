@@ -105,7 +105,9 @@ function PostSurvey() {
         <form onSubmit={handleSubmit} className={styles.form}>
       {/* Q1 Accuracy */}
 <div className={styles.questionGroup}>
-  <h2 className={styles.questionTitle}>1. How accurate or reasonable did you find the AI’s suggestions overall?</h2>
+  <h2 className={styles.questionTitle}>1. How accurate or reasonable did you find the AI’s suggestions overall?
+
+</h2>
 
   <div className={styles.radioGroup}>
     <label className={styles.radioOption}>
@@ -262,7 +264,7 @@ function PostSurvey() {
           {/* Q3 Inspiration (dropdown) */}
           <div className={styles.formGroup}>
             <h2 className={styles.questionTitle}>
-              3. To what extent did the AI’s suggestions inspire you to think of new directions?
+              3. To what extent did the AI’s suggestions inspire you to think of new directions or possibilities?
             </h2>
             <select
               name="inspiration"
@@ -283,7 +285,7 @@ function PostSurvey() {
           {/* Q4 Expansion (dropdown) */}
           <div className={styles.formGroup}>
             <h2 className={styles.questionTitle}>
-              4. How much did the AI’s suggestions help you expand or elaborate on your ideas?
+              4. How much did the AI’s suggestions help you expand or elaborate on your initial ideas?
             </h2>
             <select
               name="expansion"
@@ -325,7 +327,7 @@ function PostSurvey() {
           {/* Q6 Problems */}
           <div className={styles.formGroup}>
             <h2 className={styles.questionTitle}>
-              6. Please describe any problems or challenges you experienced.
+              6. Please describe any problems or challenges you experienced when using the AI to support your idea generation.
             </h2>
             <textarea
               name="problems"
@@ -339,7 +341,7 @@ function PostSurvey() {
           {/* Q7 Improvements */}
           <div className={styles.formGroup}>
             <h2 className={styles.questionTitle}>
-              7. In what ways could the AI interaction be improved?
+              7.  In what ways could the AI interaction be improved to better inspire or guide your idea generation?
             </h2>
             <textarea
               name="improvements"
