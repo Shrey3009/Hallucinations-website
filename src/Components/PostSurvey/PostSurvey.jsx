@@ -105,7 +105,7 @@ function PostSurvey() {
         <form onSubmit={handleSubmit} className={styles.form}>
       {/* Q1 Accuracy */}
 <div className={styles.questionGroup}>
-  <h2 className={styles.questionTitle}>Q1. How accurate or reasonable did you find the AI’s suggestions overall?</h2>
+  <h2 className={styles.questionTitle}>1. How accurate or reasonable did you find the AI’s suggestions overall?</h2>
 
   <div className={styles.radioGroup}>
     <label className={styles.radioOption}>
@@ -182,7 +182,7 @@ function PostSurvey() {
 
 {/* Q2 Helpfulness */}
 <div className={styles.questionGroup}>
-  <h2 className={styles.questionTitle}>Q2. How helpful were the AI’s suggestions in supporting your creative thinking?
+  <h2 className={styles.questionTitle}>2. How helpful were the AI’s suggestions in supporting your creative thinking?
 </h2>
 
   <div className={styles.radioGroup}>
@@ -262,7 +262,7 @@ function PostSurvey() {
           {/* Q3 Inspiration (dropdown) */}
           <div className={styles.formGroup}>
             <h2 className={styles.questionTitle}>
-              Q3. To what extent did the AI’s suggestions inspire you to think of new directions?
+              3. To what extent did the AI’s suggestions inspire you to think of new directions?
             </h2>
             <select
               name="inspiration"
@@ -283,7 +283,7 @@ function PostSurvey() {
           {/* Q4 Expansion (dropdown) */}
           <div className={styles.formGroup}>
             <h2 className={styles.questionTitle}>
-              Q4. How much did the AI’s suggestions help you expand or elaborate on your ideas?
+              4. How much did the AI’s suggestions help you expand or elaborate on your ideas?
             </h2>
             <select
               name="expansion"
@@ -304,7 +304,7 @@ function PostSurvey() {
           {/* Q5 Recombination (dropdown) */}
           <div className={styles.formGroup}>
             <h2 className={styles.questionTitle}>
-              Q5. Did the AI’s suggestions help you combine or recombine ideas in new ways?
+              5. Did the AI’s suggestions help you combine or recombine ideas in new ways?
             </h2>
             <select
               name="recombination"
@@ -325,7 +325,7 @@ function PostSurvey() {
           {/* Q6 Problems */}
           <div className={styles.formGroup}>
             <h2 className={styles.questionTitle}>
-              Q6. Please describe any problems or challenges you experienced.
+              6. Please describe any problems or challenges you experienced.
             </h2>
             <textarea
               name="problems"
@@ -339,7 +339,7 @@ function PostSurvey() {
           {/* Q7 Improvements */}
           <div className={styles.formGroup}>
             <h2 className={styles.questionTitle}>
-              Q7. In what ways could the AI interaction be improved?
+              7. In what ways could the AI interaction be improved?
             </h2>
             <textarea
               name="improvements"
