@@ -78,7 +78,7 @@ function Chatbot({ task, round, resetToggle, onReset, level }) {
         alert("Only 1 prompt allowed");
         return;
       }
-      if (round === 2 && promptCount >= 3) {
+      if (round === 2 && promptCount >= 4) {
         alert("Only 3 prompts allowed");
         return;
       }

@@ -26,10 +26,19 @@
 }
 
 .taskDescription {
-  font-size: 1.1rem;
-  color: var(--text-secondary);
+  font-size: 1.2rem;
+  color: #6c757d;
   line-height: 1.6;
   margin-bottom: 2rem;
+  font-family: var(--font-primary);
+}
+
+.timer {
+  text-align: center;
+  margin: 1rem 0;
+  font-size: 1.2rem;
+  color: #2c3e50;
+  font-family: var(--font-primary);
 }
 
 .objectCard {

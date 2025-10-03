@@ -9,7 +9,7 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
   );
   const { surveyId } = useSurvey();
   
-  const [timeLeft, setTimeLeft] = useState(180); // 180 seconds = 3 minutes
+  const [timeLeft, setTimeLeft] = useState(240); // 4 minutes in seconds
   const [currentPatent, setCurrentPatent] = useState(null);
 
   // Fetch patent for the current task
@@ -45,7 +45,7 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
 
   // Reset timer when round changes
   useEffect(() => {
-    setTimeLeft(180);
+    setTimeLeft(240);
   }, [round]);
 
   useEffect(() => {
@@ -195,7 +195,12 @@ function AUT({ round, onStateChange, task, randomString, temperature }) {
             </div>
           </div>
         ))}
-
+        {task >= 2 && task <= 4 && round === 2 && (
+      <p style={{ marginBottom: "1rem", color: "#444", fontSize: "20px" }}>
+          Please provide updated ideas from Round 1 or write new ideas. 
+          Do not only repeat your original Round 1 answers.
+      </p>
+        )}
         <div className={styles.buttonContainer}>
           <button type="submit" className={styles.submitButton}>
             Submit Answers
